@@ -1,278 +1,371 @@
 /* =========================================================
-   MediCare Hospital Management System - DATA LAYER
-   Seed hospital database: hospitals, departments, doctors,
-   shift-wise schedules, patients. Stored in localStorage.
+   NovaBank — Banking Management System - DATA LAYER
+   Generates a realistic random bank database (customers,
+   accounts, transactions, loans, cards) stored in
+   localStorage. All data below is randomly generated.
    ========================================================= */
 
-const STORAGE_KEY = 'medicare_db_v3';
+const STORAGE_KEY = 'novabank_db_v2';
 
-const HOSPITAL_INFO = {
-    name: 'MediCare Super Speciality Hospital',
-    emergency: '+91 98765 43210',
-    helpline: '1800-987-6543',
-    appointmentPhone: '+91 91234 56780',
-    reception: '+91 9120 000 000',
-    email: 'care@medicare.in',
-    appointmentsEmail: 'appointments@medicare.in',
-    locations: [
-        { name: 'Main Campus', address: '12, Health Avenue, MG Road, Indore, MP - 452001' },
-        { name: 'City Branch', address: '45, Green Park, Vijay Nagar, Indore, MP - 452010' },
-        { name: 'North Wing', address: '8, Ring Road, Bhopal, MP - 462001' }
-    ],
-    openingHours: {
-        'Emergency / ICU': 'Open 24 x 7, all year',
-        'Ambulance': 'Available 24 x 7',
-        'Pharmacy': 'Open 24 x 7',
-        'OPD': 'Mon - Sat, 8:00 AM - 8:00 PM (Sun 10 AM - 2 PM)',
-        'Laboratory': '7:00 AM - 10:00 PM'
-    },
-    consultationOptions: [
-        'Offline - Visit the hospital in person',
-        'Online - Video / phone consultation from home'
-    ],
-    shiftsTiming: {
-        'Morning': '8:00 AM - 2:00 PM',
-        'Evening': '2:00 PM - 8:00 PM',
-        'Night': '8:00 PM - 8:00 AM'
-    }
+const BANK_INFO = {
+    name: 'NovaBank',
+    ifscPrefix: 'NOVA',
+    helpline: '1800-NOVA-BANK',
+    netbankingHelp: '1800-887-6540',
+    email: 'care@novabank.in',
+    branch: 'Main Branch, MG Road, Indore, MP - 452001',
+    upiSuffix: '@novabank',
+    minBalance: 2000
 };
 
-// Shift-wise schedule template per weekday (0=Sunday .. 6=Saturday)
-// A doctor can be 'morning' | 'evening' | 'night' | 'off'
-const DEFAULT_DOCTORS = [
-    {
-        id: 'D001',
-        name: 'Dr. Rajesh Sharma',
-        specialty: 'General Physician',
-        department: 'General Medicine',
-        experience: 18,
-        qualification: 'MBBS, MD (Medicine)',
-        phone: '+91 90011 11101',
-        email: 'rajesh.sharma@medicare.in',
-        fee: 600,
-        schedule: { 6: 'morning', 0: 'off', 1: 'morning', 2: 'evening', 3: 'morning', 4: 'evening', 5: 'morning' }
-    },
-    {
-        id: 'D002',
-        name: 'Dr. Priya Verma',
-        specialty: 'Cardiologist',
-        department: 'Cardiology',
-        experience: '12 years',
-        qualification: 'MBBS, MD (Cardiology)',
-        phone: '+91 98711 22202',
-        email: 'priya.verma@medicare.in',
-        fee: 900,
-        schedule: { 0: 'off', 1: 'morning', 2: 'morning', 3: 'night', 4: 'morning', 5: 'evening', 6: 'morning' }
-    },
-    {
-        id: 'D003',
-        name: 'Dr. Arjun Mehta',
-        specialty: 'Orthopedic Surgeon',
-        department: 'Orthopedics',
-        experience: '15 years',
-        qualification: 'MBBS, MS (Ortho)',
-        phone: '+91 98711 33303',
-        email: 'arjun.mehta@medicare.in',
-        fee: 700,
-        schedule: { 0: 'off', 1: 'evening', 2: 'morning', 3: 'evening', 4: 'off', 5: 'morning', 6: 'evening' }
-    },
-    {
-        id: 'D004',
-        name: 'Dr. Kavita Nair',
-        specialty: 'Pediatrician',
-        department: 'Pediatrics',
-        experience: '9 years',
-        qualification: 'MBBS, MD (Pediatrics)',
-        phone: '+91 98711 44404',
-        email: 'kavita.nair@medicare.in',
-        fee: 500,
-        schedule: { 0: 'off', 1: 'morning', 2: 'evening', 3: 'morning', 4: 'evening', 5: 'morning', 6: 'off' }
-    },
-    {
-        id: 'D005',
-        name: 'Dr. Vikram Singh',
-        specialty: 'Neurologist',
-        department: 'Neurology',
-        experience: '18 years',
-        qualification: 'MBBS, MD (Neurology)',
-        phone: '+91 98711 55505',
-        email: 'vikram.singh@medicare.in',
-        fee: 1000,
-        schedule: { 0: 'off', 1: 'off', 2: 'night', 3: 'morning', 4: 'evening', 5: 'morning', 6: 'evening' }
-    },
-    {
-        id: 'D006',
-        name: 'Dr. Meera Reddy',
-        specialty: 'Dermatologist',
-        department: 'Dermatology',
-        experience: '7 years',
-        qualification: 'MBBS, MD (Dermatology)',
-        phone: '+91 98711 66606',
-        email: 'meera.reddy@medicare.in',
-        fee: 550,
-        schedule: { 0: 'off', 1: 'evening', 2: 'morning', 3: 'off', 4: 'morning', 5: 'evening', 6: 'morning' }
-    },
-    {
-        id: 'D007',
-        name: 'Dr. Amit Joshi',
-        specialty: 'Gynecologist',
-        department: 'Gynecology & Obstetrics',
-        experience: '11 years',
-        qualification: 'MBBS, MS (OBG)',
-        phone: '+91 98711 77707',
-        email: 'amit.joshi@medicare.in',
-        fee: 800,
-        schedule: { 0: 'off', 1: 'morning', 2: 'evening', 3: 'morning', 4: 'evening', 5: 'off', 6: 'morning' }
-    },
-    {
-        id: 'D008',
-        name: 'Dr. Sunita Kulkarni',
-        specialty: 'ENT Specialist',
-        department: 'ENT (Ear Nose Throat)',
-        experience: '10 years',
-        qualification: 'MBBS, MS (ENT)',
-        phone: '+91 98711 88808',
-        email: 'sunita.kulkarni@medicare.in',
-        fee: 450,
-        schedule: { 0: 'off', 1: 'off', 2: 'evening', 3: 'evening', 4: 'morning', 5: 'morning', 6: 'evening' }
-    }
-];
-
-const SEED_PATIENTS = [
-    { id: 'P1001', name: 'Rahul Sharma', phone: '+91 98230 10001', email: 'rahul.s@gmail.com', blood: 'B+', age: 34, gender: 'Male' },
-    { id: 'P1002', name: 'Sneha Patel', phone: '+91 98230 10002', email: 'sneha.p@yahoo.com', blood: 'O+', age: 28, gender: 'Female' },
-    { id: 'P1003', name: 'Mohammed Ali', phone: '+91 98230 10003', email: 'ali.m@gmail.com', blood: 'A+', age: 45, gender: 'Male' },
-    { id: 'P1004', name: 'Anjali Gupta', phone: '+91 98230 10004', email: 'anjali.g@outlook.com', blood: 'AB+', age: 22, gender: 'Female' },
-    { id: 'P1005', name: 'Suresh Kumar', phone: '+91 98230 10005', email: 'suresh.k@gmail.com', blood: 'O-', age: 51, gender: 'Male' },
-    { id: 'P1006', name: 'Neha Jain', phone: '+91 98230 10006', email: 'neha.j@medicare.in', blood: 'B-', age: 31, gender: 'Female' },
-    { id: 'P1007', name: 'Deepak Yadav', phone: '+91 98230 10007', email: 'deepak.y@gmail.com', blood: 'A-', age: 39, gender: 'Male' },
-    { id: 'P1008', name: 'Farah Khan', phone: '+91 98230 10008', email: 'farah.k@medicare.in', blood: 'O+', age: 27, gender: 'Female' }
-];
-
-const SEED_APPOINTMENTS = [
-    {
-        id: 'APT-1001',
-        patientName: 'Rahul Sharma',
-        gender: 'Male',
-        phone: '+91 98765 10001',
-        email: 'rahul.s@gmail.com',
-        doctorId: 'D001',
-        doctorName: 'Dr. Rajesh Sharma',
-        doctorPhone: '+91 90011 11101',
-        doctorEmail: 'rajesh.sharma@medicare.in',
-        department: 'General Medicine',
-        date: '2026-08-07',
-        time: '9:00 AM',
-        status: 'confirmed',
-        mode: 'offline',
-        reason: 'Fever and cold since 3 days'
-    },
-    {
-        id: 'APT-1002',
-        patientName: 'Anjali Gupta',
-        gender: 'Female',
-        phone: '+91 98230 10004',
-        email: 'anjali.g@outlook.com',
-        doctorId: 'D002',
-        doctorName: 'Dr. Priya Verma',
-        doctorPhone: '+91 98711 22202',
-        doctorEmail: 'priya.verma@medicare.in',
-        department: 'Cardiology',
-        date: '2026-08-07',
-        time: '11:30 AM',
-        status: 'confirmed',
-        mode: 'online',
-        reason: 'Routine heart checkup'
-    },
-    {
-        id: 'APT-1003',
-        patientName: 'Mohammed Ali',
-        gender: 'Male',
-        phone: '+91 98230 10003',
-        email: 'ali.m@gmail.com',
-        doctorId: 'D003',
-        doctorName: 'Dr. Arjun Mehta',
-        doctorPhone: '+91 98711 33303',
-        doctorEmail: 'arjun.mehta@medicare.in',
-        department: 'Orthopedics',
-        date: '2026-08-08',
-        time: '10:00 AM',
-        status: 'completed',
-        mode: 'offline',
-        reason: 'Knee pain consultation'
-    },
-    {
-        id: 'APT-1004',
-        patientName: 'Farah Khan',
-        gender: 'Female',
-        phone: '+91 98230 10008',
-        email: 'farah.k@gmail.com',
-        doctorId: 'D004',
-        doctorName: 'Dr. Kavita Nair',
-        doctorPhone: '+91 98711 44404',
-        doctorEmail: 'kavita.nair@medicare.in',
-        department: 'Pediatrics',
-        date: '2026-08-08',
-        time: '4:00 PM',
-        status: 'confirmed',
-        mode: 'offline',
-        reason: 'Child vaccination'
-    }
-];
-
-/* Slot generation: 30-minute slots within a shift (minutes) */
-const SHIFT_SLOTS = {
-    morning: { start: 8 * 60, end: 14 * 60, label: 'Morning  (8:00 AM - 2:00 PM)' },
-    evening: { start: 14 * 60, end: 20 * 60, label: 'Evening  (2:00 PM - 8:00 PM)' },
-    night:   { start: 20 * 60, end: 23.5 * 60, label: 'Night  (8:00 PM - 12:00 AM)' }
-};
-
-function to12h(minutes) {
-    let h = Math.floor(minutes / 60);
-    let m = minutes % 60;
-    const suffix = h >= 12 ? 'PM' : 'AM';
-    h = h % 12; if (h === 0) h = 12;
-    return (h + ':' + (m < 10 ? '0' + m : m) + ' ' + suffix);
-}
-
-function getShiftDay(doctor, dateStr) {
-    const d = new Date(dateStr + 'T12:00:00');
-    const day = d.getDay();
-    return doctor.schedule[day] || 'off';
-}
-
-function generateSlotsFor(doctor, dateStr) {
-    const shift = getShiftDay(doctor, dateStr);
-    if (!shift || shift === 'off') return [];
-    const cfg = SHIFT_SLOTS[shift];
-    const slots = [];
-    for (let t = cfg.start; t + 30 <= cfg.end; t += 30) {
-        slots.push(to12h(t));
-    }
-    return slots;
-}
-
-function getShiftLabel(shift) {
-    if (!shift || shift === 'off') return 'Off';
-    return SHIFT_SLOTS[shift].label;
-}
-
-function makeId(prefix) {
-    return prefix + '-' + Math.floor(1000 + Math.random() * 9000);
-}
-
-/* ---------- Database access ---------- */
-function initDB() {
-    const existing = localStorage.getItem(STORAGE_KEY);
-    if (existing) {
-        try { return JSON.parse(existing); } catch (e) { /* corrupted -> reseed */ }
-    }
-    const db = {
-        hospital: HOSPITAL_INFO,
-        doctors: DEFAULT_DOCTORS,
-        patients: SEED_PATIENTS,
-        appointments: SEED_APPOINTMENTS
+/* ---------- Seeded PRNG so demo data is stable ---------- */
+function mulberry32(seed) {
+    let a = seed >>> 0;
+    return function () {
+        a |= 0; a = (a + 0x6D2B79F5) | 0;
+        let t = Math.imul(a ^ (a >>> 15), 1 | a);
+        t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
     };
-    saveDB(db);
+}
+const rand = mulberry32(20260807);
+
+function pick(arr) { return arr[Math.floor(rand() * arr.length)]; }
+function randInt(min, max) { return Math.floor(rand() * (max - min + 1)) + min; }
+function randAmount(min, max) { return Math.round(rand() * (max - min) + min); }
+function pad(n, w) { return String(n).padStart(w, '0'); }
+let __uidc = 0;
+function uid(prefix) {
+    __uidc = (__uidc + 1) % 99991;
+    return (prefix || 'id') + '_' + Date.now().toString(36) + __uidc.toString(36);
+}
+
+/* ---------- Fake data pools ---------- */
+const FIRST_NAMES = ['Aarav','Vihaan','Diya','Ananya','Arjun','Saanvi','Rohan','Priya','Kabir','Ishita','Advait','Myra','Ranbir','Naina','Dev','Tara','Manav','Zoya','Ravi','Kavya','Aryan','Sneha','Vikram','Pooja','Harsh','Ritu','Sameer','Anjali'];
+const LAST_NAMES = ['Sharma','Verma','Patel','Iyer','Nair','Singh','Gupta','Mehta','Joshi','Kulkarni','Das','Chawla','Kapoor','Malhotra','Bhatia','Saxena','Rao','Desai','Jain','Reddy'];
+const CITIES = ['Indore','Bhopal','Mumbai','Delhi','Pune','Jaipur','Ahmedabad','Hyderabad','Nagpur','Bengaluru'];
+const STREETS = ['MG Road','Ring Road','Vijay Nagar','Green Park','Civil Lines','Palace Road','Lake View','City Center','Sector 21','Grand Avenue'];
+const DOMAINS = ['gmail.com','yahoo.com','outlook.com','novamail.in'];
+
+const MERCHANTS = ['Swiggy','Amazon','BigBasket','Indian Oil Petrol','Electricity Board','Flipkart','Netflix','Zomato','Ola Cabs','Jio Recharge','Insurance Premium','Rent Payment','Groceries','Pharmacy','EMI Payment','Salary Credit','Airtel Recharge','BookMyShow','Myntra','Public Transport'];
+
+const CHEQUE_BOOK_PAGES = [25, 50, 100];
+
+/* ---------- Random generators ---------- */
+function randomName() {
+    return pick(FIRST_NAMES) + ' ' + pick(LAST_NAMES) + (rand() > 0.5 ? ' ' + pick(['K.','R.','M.','S.','D.']) : '');
+}
+function randomEmail(name) {
+    const core = name.toLowerCase().replace(/[^a-z ]/g, '').trim().split(/\s+/).join('.');
+    return core + '.' + randInt(10, 999) + '@' + pick(DOMAINS);
+}
+function randomPhone() {
+    return '+91 ' + pick(['9','8','7','6']) + randInt(100000000, 999999999) + '';
+}
+function randomAddress() {
+    return randInt(1, 400) + ', ' + pick(STREETS) + ', ' + pick(CITIES) + ' - ' + randInt(452001, 560100);
+}
+function randomCity() { return pick(CITIES); }
+function randomDOB() {
+    const y = randInt(1975, 2005);
+    return y + '-' + pad(randInt(1, 12), 2) + '-' + pad(randInt(1, 28), 2);
+}
+function randomPAN() {
+    let s = '';
+    const letters = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+    for (let i = 0; i < 5; i++) s += letters[randInt(0, letters.length - 1)];
+    s += randInt(1000, 9999) + letters[randInt(0, letters.length - 1)];
+    return s;
+}
+
+function randomCustomer(i) {
+    const name = randomName();
+    const city = randomCity();
+    return {
+        id: 'CUS' + pad(1000 + i, 4),
+        name,
+        email: randomEmailFrom(name),
+        phone: randomPhone(),
+        address: randomAddress(),
+        city,
+        dob: randomDOB(),
+        pan: randomPAN(),
+        kyc: rand() > 0.85 ? 'Pending' : 'Verified',
+        createdAt: daysAgoStr(randInt(20, 700))
+    };
+}
+function randomEmailFrom(name) {
+    const core = name.toLowerCase().replace(/[^a-z ]/g, '').trim().split(/\s+/).join('.');
+    return core + '.' + randInt(10, 999) + '@' + pick(DOMAINS);
+}
+
+function accountNumber() {
+    let n = String(randInt(10000000000, 99999999999));
+    return n;
+}
+function ifsc() { return BANK_INFO.ifsc + '0' + pad(randInt(1, 99), 3); }
+
+/* ---------- account ---------- */
+function randomAccount(customerId, type, status) {
+    type = type || pick(['Savings', 'Savings', 'Current', 'Fixed Deposit']);
+    const bal = type === 'Current' ? randAmount(40000, 900000)
+        : type === 'Fixed Deposit' ? randAmount(100000, 8000000)
+        : randAmount(5000, 350000);
+    return {
+        id: uid('acc'),
+        customerId,
+        type,
+        number: accountNumber(),
+        ifsc: ifsc(),
+        branch: 'NovaBank ' + randomCity() + ' Branch',
+        balance: bal,
+        rate: type === 'Savings' ? 3.5 : type === 'Current' ? 0 : 7.1,
+        status: status || pick(['Active', 'Active', 'Active', 'Pending']),
+        createdAt: daysAgoStr(randInt(20, 800))
+    };
+}
+
+/* ---------- transactions ---------- */
+function randomTxn(accountId, accountNo, daysBack) {
+    const t = rand();
+    let type, desc, amount, dir;
+    if (t < 0.4) {
+        type = 'Withdrawal'; desc = pick(MERCHANTS);
+        amount = randAmount(100, 25000); dir = -1;
+    } else if (t < 0.55) {
+        type = 'UPI Pay'; desc = pick(MERCHANTS) + ' (UPI)';
+        amount = randAmount(50, 8000); dir = -1;
+    } else if (t < 0.7) {
+        type = 'Transfer'; desc = 'Fund transfer to account ' + accountNumber().slice(0, 4) + 'XX';
+        amount = randAmount(1000, 50000); dir = -1;
+    } else if (t < 0.85) {
+        type = 'Deposit'; desc = type === 'Deposit' ? 'Cash deposit' : 'Bank credit';
+        amount = randAmount(500, 30000); dir = 1;
+    } else {
+        type = 'Interest'; desc = 'Monthly interest credit';
+        amount = randAmount(10, 4000); dir = 1;
+    }
+    const d = new Date();
+    d.setDate(d.getDate() - randInt(0, daysBack));
+    return {
+        id: uid('TX'),
+        accountId,
+        accountNo,
+        type,
+        description: desc,
+        amount,
+        dir,
+        date: d.toISOString().slice(0, 10) + 'T' + pad(randInt(7, 21), 2) + ':' + pad(randInt(0, 59), 2) + ':00',
+        status: 'Completed'
+    };
+}
+
+/* ---------- loans ---------- */
+const LOAN_TYPES = ['Home Loan', 'Personal Loan', 'Car Loan', 'Education Loan', 'Business Loan'];
+function randomLoan(customerId, customerName, i) {
+    const type = pick(LOAN_TYPES);
+    const amount = randInt(2, 300) * 100000;
+    const tenure = pick([12, 24, 36, 48, 60, 120, 180, 240]);
+    const rate = +(rand() * 5 + 8.5).toFixed(1);
+    const emi = computeEmi(amount, rate, tenure);
+    const statusList = ['Approved', 'Approved', 'Pending', 'Rejected', 'Approved'];
+    return {
+        id: 'LN' + pad(100 + i, 3),
+        customerId,
+        customerName,
+        type,
+        amount,
+        tenure,
+        rate,
+        emi: Math.round(emi),
+        status: pick(statusList),
+        appliedDate: daysAgoStr(randInt(2, 300)),
+        purpose: pick(['Purchase of ' + type.toLowerCase().replace(' loan', ''), 'Home renovation', 'Business working capital', 'Car purchase', 'Higher education fees', 'Medical emergency', 'Debt consolidation'])
+    };
+}
+
+/* EMI: P * r * (1+r)^n / ((1+r)^n - 1) */
+function computeEmi(P, annualRate, months) {
+    const r = annualRate / 12 / 100;
+    if (r === 0) return P / months;
+    return P * r * Math.pow(1 + r, months) / (Math.pow(1 + r, months) - 1);
+}
+
+/* ---------- cards ---------- */
+function randomCard(accountId, customerName, type) {
+    type = type || (rand() > 0.6 ? 'Credit' : 'Debit');
+    let num = '';
+    for (let i = 0; i < 16; i++) num += randInt(0, 9);
+    return {
+        id: uid('CR'),
+        accountId,
+        customerName,
+        type,
+        variant: pick(['Classic', 'Gold', 'Platinum', 'Infinite']),
+        number: num.match(/.{1,4}/g).join(' '),
+        cvv: pad(randInt(100, 999), 3),
+        expiry: pad(randInt(1, 12), 2) + '/' + (randInt(27, 30)),
+        pin: pad(randInt(1000, 9999), 4),
+        status: 'Active'
+    };
+}
+
+/* ---------- date helpers ---------- */
+function todayStr() {
+    return new Date().toISOString().slice(0, 10);
+}
+function daysAgoStr(n) {
+    const d = new Date();
+    d.setDate(d.getDate() - n);
+    return d.toISOString().slice(0, 10);
+}
+function formatDate(ts) {
+    if (!ts) return '';
+    const d = new Date(ts);
+    return d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+function formatTime(ts) {
+    if (!ts) return '';
+    return new Date(ts).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+}
+function formatDateTime(ts) {
+    if (!ts) return '';
+    return formatDate(ts) + ' ' + formatTime(ts);
+}
+function formatINR(n) {
+    return '₹' + Number(n).toLocaleString('en-IN', { maximumFractionDigits: 2 });
+}
+/* stable balance curve for a seeded account */
+function runningBalance(acct) {
+    return acct.balance;
+}
+
+/* ---------- Build random sample DB ---------- */
+function generateSampleDB() {
+    const db = { users: [], customers: [], accounts: [], transactions: [], loans: [], cards: [], notifications: [], activityLogs: [], chequeRequests: [], sessions: [] };
+
+    /* Demo users + their customer profiles */
+    const adminName = 'Admin Nova', userName = 'Priya Sharma';
+
+    db.users.push({
+        id: 'USR_ADMIN', name: adminName, email: 'admin@novabank.in', phone: '+91 98200 00001',
+        passwordHash: hashPw('Admin@123'), role: 'Admin', twoFA: false, status: 'Active', createdAt: daysAgoStr(400)
+    });
+    db.users.push({
+        id: 'USR_USER', name: userName, email: 'user@novabank.in', phone: '+91 98200 00002',
+        passwordHash: hashPw('User@123'), role: 'User', twoFA: false, status: 'active', createdAt: daysAgoStr(300)
+    });
+
+    /* customer rows for the two demo users */
+    db.customers.push({
+        id: 'CUS0001', name: userName, email: 'user@novabank.in', phone: '+91 98200 00002',
+        address: '21, Palace Road, Indore - 452001', city: 'Indore', dob: '1996-04-14', pan: 'AJKPP8251L',
+        kyc: 'Verified', createdAt: daysAgoStr(300)
+    });
+    db.customers.push({
+        id: 'CUS0002', name: adminName, email: 'admin@novabank.in', phone: '+91 98200 00001',
+        address: '8, MG Road, Indore - 452002', city: 'Indore', dob: '1990-01-01', pan: 'BHIJ2230M',
+        kyc: 'Verified', createdAt: daysAgoStr(400)
+    });
+
+    /* two accounts + history for demo user */
+    const acc1 = randomAccount('CUS0001', 'Savings', 'Active');
+    acc1.balance = 485000;
+    const acc2 = randomAccount('CUS0001', 'Fixed Deposit', 'Active');
+    acc2.balance = 1500000;
+    const acc3 = randomAccount('CUS0001', 'Current', 'Pending'); // in pending queue for admin approve demo
+    db.accounts.push(acc1, acc2, acc3);
+
+    db.cards.push(randomCard(acc1.id, userName, 'Debit'));
+    db.cards[0].number = '5519 3301 8840 2214';
+
+    db.loans.push(randomLoan('CUS0001', userName, 1));
+    db.loans[0].status = 'Pending';
+    db.loans[0].type = 'Home Loan';
+
+    /* random customers + their data */
+    for (let i = 0; i < 12; i++) {
+        const c = randomCustomer(10 + i);
+        db.customers.push(c);
+        const nAcc = randInt(1, 3);
+        for (let a = 0; a < nAcc; a++) {
+            const acct = randomAccount(c.id);
+            db.accounts.push(acct);
+            db.cards.push(randomCard(acct.id, c.name));
+        }
+        if (rand() > 0.35) db.loans.push(randomLoan(c.id, c.name, 10 + i));
+    }
+
+    /* transactions for every account (last 90 days) */
+    db.accounts.forEach(acct => {
+        const n = randInt(14, 40);
+        const list = [];
+        for (let i = 0; i < n; i++) list.push(randomTxn(acct.id, acct.number, 90));
+        list.sort((a, b) => new Date(a.date) - new Date(b.date));
+        db.transactions = db.transactions.concat(list);
+    });
+    db.transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    /* activity logs + notifications for demo user */
+    db.activityLogs.push(
+        { id: uid('LOG'), userId: 'USR_USER', action: 'Account opened — Savings', date: daysAgoStr(60) },
+        { id: uid('LOG'), userId: 'USR_USER', action: 'FD created — ₹1,500,000', date: daysAgoStr(40) },
+        { id: uid('LOG'), userId: 'USR_ADMIN', action: 'Approved loan application LD-101', date: daysAgoStr(10) },
+        { id: uid('LOG'), userId: 'USR_ADMIN', action: 'Updated interest rates', date: daysAgoStr(5) }
+    );
+    db.sessions.push(
+        { id: uid('SS'), userId: 'USR_USER', device: 'Windows · Chrome', location: 'Indore', ip: '103.58.22.' + randInt(1, 250), lastSeen: 'Now' },
+        { id: uid('SS'), userId: 'USR_USER', device: 'Android · NovaBank App', location: 'Bhopal', ip: '117.29.90.' + randInt(1, 250), lastSeen: daysAgoStr(2) },
+        { id: uid('SS'), userId: 'USR_ADMIN', device: 'Windows · Chrome', location: 'Indore', ip: '103.58.22.9', lastSeen: daysAgoStr(0) }
+    );
+    db.notifications.push(
+        { id: uid('NF'), userId: 'USR_USER', type: 'info', title: 'Welcome to NovaBank', msg: 'Your net banking account is active. Enable 2FA for extra security.', date: daysAgoStr(300) },
+        { id: uid('NF'), userId: 'USR_USER', type: 'txn', title: 'Transaction Alert', msg: 'Interest credited on Savings — +₹3,214', date: daysAgoStr(3) }
+    );
     return db;
+}
+
+/* ---------- simple password hash (demo only) ---------- */
+function hashPw(pw) {
+    let h = 0x811c9dc5;
+    for (let i = 0; i < pw.length; i++) {
+        h ^= pw.charCodeAt(i);
+        h = Math.imul(h, 0x01000193);
+    }
+    return 'h' + (h >>> 0).toString(16) + '_' + pw.length.toString(16);
+}
+function verifyPw(pw, hash) {
+    return hashPw(pw) === hash;
+}
+
+/* ---------- fake JWT ---------- */
+function makeJWT(user) {
+    const t = Date.now();
+    const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
+    const payload = btoa(JSON.stringify({
+        sub: user.id, name: user.name, email: user.email, role: user.role,
+        iat: t, exp: t + 3600 * 1000 * 2
+    }));
+    return header + '.' + payload + '.nv_' + hashPw(user.id + t).slice(0, 12);
+}
+
+/* ---------- INIT ---------- */
+function initDB() {
+    let db = null;
+    try { db = JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch (e) { db = null; }
+    if (!db || !db.users || !db.customers) {
+        db = generateSampleDB();
+        saveDB(db);
+    }
+    return db;
+}
+function saveDB(db) {
+    db = db || DB;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+}
+
+/* simple id counter helper */
+let __seq = 1000;
+function nextNum(prefix) {
+    return (prefix || '') + (++__seq);
 }

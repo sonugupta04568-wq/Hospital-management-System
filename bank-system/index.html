@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrismBank — Banking Database System</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- ===================== LOGIN SCREEN ===================== -->
+    <section id="login-screen" class="login-screen">
+        <div class="login-glow login-glow-a"></div>
+        <div class="login-glow login-glow-b"></div>
+        <div class="login-card">
+            <div class="login-brand">
+                <svg class="brand-logo" viewBox="0 0 48 48" aria-hidden="true">
+                    <defs>
+                        <linearGradient id="lgP" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0%" stop-color="#3e7bff"/>
+                            <stop offset="100%" stop-color="#ec4899"/>
+                        </linearGradient>
+                    </defs>
+                    <rect x="2" y="2" width="44" height="44" rx="13" fill="#0b0d16" stroke="url(#lgP)" stroke-width="2"/>
+                    <path d="M24 9 L40 21 M24 9 L8 21 M8 21 v16 h32 v-16 M14 27 h6 v8 h-6 z M21 27 h6 v8 h-6 z M28 27 h6 v8 h-6 z" fill="none" stroke="url(#lgP)" stroke-width="2.4" stroke-linejoin="round"/>
+                </svg>
+                <div>
+                    <h1>Prism<span class="acc">Bank</span></h1>
+                    <p>Banking Database Management System</p>
+                </div>
+            </div>
+
+            <div id="step-login">
+                <h2>Sign in to your account</h2>
+                <p class="muted">Credentials are protected with 2-step OTP verification.</p>
+                <form id="login-form">
+                    <label>Email Address</label>
+                    <input type="email" id="login-email" class="input" placeholder="you@prismbank.in" required>
+                    <label>Password</label>
+                    <div class="pwd-wrap">
+                        <input type="password" id="login-password" class="input" placeholder="••••••••" required>
+                        <button type="button" class="btn btn-icon" data-pwd-toggle="login-password">&#128065;</button>
+                    </div>
+                    <button type="submit" class="btn btn-grad btn-block">Login &amp; Continue &rarr;</button>
+                </form>
+                <input type="checkbox" id="remember"> Remember me
+                <div class="demo-box">
+                    <b>Demo Credentials</b>
+                    <div>Admin &nbsp;<code>admin@prismbank.in</code> / <code>Prism@123</code></div>
+                </div>
+            </div>
+
+            <div id="step-otp" class="hidden">
+                <h2>OTP Verification</h2>
+                <p class="muted">We sent a <b>6-digit code</b> to your registered mobile number ending in <span id="otp-mask">••••3210</span>.</p>
+                <div class="demo-otp">DEMO OTP: <span id="demo-otp">—</span></div>
+                <div class="otp-inputs" id="otp-inputs">
+                    <input type="text" maxlength="1" class="otp-box" inputmode="numeric" data-i="0">
+                    <input type="text" maxlength="1" class="otp-box" inputmode="numeric" data-i="1">
+                    <input type="text" maxlength="1" class="otp-box" inputmode="numeric" data-i="2">
+                    <input type="text" maxlength="1" class="otp-box" inputmode="numeric" data-i="3">
+                    <input type="text" maxlength="1" class="otp-box" inputmode="numeric" data-i="4">
+                    <input type="text" maxlength="1" class="otp-box" inputmode="numeric" data-i="5">
+                </div>
+                <button id="otp-verify" class="btn btn-grad btn-block">Verify OTP</button>
+                <button id="otp-back" class="btn-link">← Back to login</button>
+                <div class="otp-timer">Code expires in <b id="otp-timer-text">120s</b></div>
+            </div>
+        </div>
+        <p class="login-foot">© 2026 PrismBank · Demo project · All data is randomly generated.</p>
+    </section>
+
+    <!-- ===================== APP ===================== -->
+    <section id="app-screen" class="hidden">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="side-brand">
+                <svg class="brand-logo-sm" viewBox="0 0 48 48" aria-hidden="true">
+                    <defs>
+                        <linearGradient id="lgS" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0%" stop-color="#3e7bff"/>
+                            <stop offset="100%" stop-color="#ec4899"/>
+                        </linearGradient>
+                    </defs>
+                    <rect x="2" y="2" width="44" height="44" rx="13" fill="#0b0d16" stroke="url(#lgS)" stroke-width="2"/>
+                    <path d="M22 9 L12 21 M22 9 L32 21 M22 9 V36 M12 21 h20 M15 30 h14" fill="none" stroke="url(#lgS)" stroke-width="2.4" stroke-linejoin="round"/>
+                </svg>
+                <div>
+                    <b>Prism<span class="acc">Bank</span></b>
+                    <small>Core Database</small>
+                </div>
+            </div>
+
+            <nav class="side-nav">
+                <button class="side-link active" data-view="dashboard"><span>◆</span>Dashboard</button>
+                <button class="side-link" data-view="customers"><span>👥</span>Customers</button>
+                <button class="side-link" data-view="branches"><span>🏛️</span>Branches</button>
+                <button class="side-link" data-view="employees"><span>👷</span>Employees</button>
+                <button class="side-link" data-view="loans"><span>💸</span>Loans</button>
+                <button class="side-link" data-view="transactions"><span>🔁</span>Transactions</button>
+                <button class="side-link" data-view="reports"><span>📊</span>Reports</button>
+            </nav>
+
+            <div class="side-foot">
+                <div class="side-user" id="side-user"></div>
+                <button class="btn btn-ghost btn-block" id="btn-logout">Logout</button>
+            </div>
+        </aside>
+
+        <!-- MAIN -->
+        <main class="main">
+            <header class="main-top">
+                <div class="search-box">
+                    <input type="text" id="global-search" class="input" placeholder="Search customers, branches, employees, IFSC…">
+                </div>
+                <div class="clock" id="clock">—</div>
+            </header>
+
+            <div class="content" id="content">
+                <!-- views injected by JS -->
+            </div>
+        </main>
+    </section>
+
+    <!-- ===================== MODAL ===================== -->
+    <div id="modal-overlay" class="modal-overlay hidden">
+        <div class="modal" id="modal-box">
+            <div class="modal-head">
+                <h3 id="modal-title">Title</h3>
+                <button class="modal-close" id="modal-close">✕</button>
+            </div>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div id="toast" class="toast"></div>
+
+    <script src="js/data.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

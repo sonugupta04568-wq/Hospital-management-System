@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Bank — Simple Banking System</title>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
+
+    body {
+        background: #05050b;
+        color: #e9eaf6;
+        min-height: 100vh;
+    }
+
+    /* ---------- HEADER ---------- */
+    .header {
+        background: #0c0c16;
+        border-bottom: 2px solid #3d7bff;
+        padding: 12px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .logo { display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 800; }
+    .logo .badge {
+        width: 38px; height: 38px; border-radius: 10px;
+        background: linear-gradient(135deg, #3d7bff, #ec4899);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 18px;
+    }
+    .logo span.em { color: #ec4899; }
+    .header-user { font-size: 14px; color: #9aa0b8; display: flex; align-items: center; gap: 10px; }
+
+    .btn {
+        border: none; border-radius: 8px; padding: 9px 18px;
+        font-size: 14px; font-weight: 700; cursor: pointer;
+        background: linear-gradient(135deg, #3d7bff, #ec4899);
+        color: #fff; transition: .2s;
+    }
+    .btn:hover { transform: translateY(-1px); filter: brightness(1.1); }
+    .btn.ghost { background: #1a1a2e; border: 1px solid #33335a; color: #e9eaf6; }
+    .btn.red { background: #f43f5e; }
+    .btn.green { background: #10b981; }
+    .btn.small { padding: 6px 12px; font-size: 13px; }
+    .btn.block { width: 100%; }
+
+    /* ---------- LOGIN SCREEN ---------- */
+    #screen-login { max-width: 480px; margin: 40px auto; padding: 28px; }
+    .login-card {
+        background: #0e0e1a; border: 1px solid #23233a; border-radius: 14px; padding: 26px;
+    }
+    .login-card h2 { font-size: 22px; margin-bottom: 4px; }
+    .login-card h2 span { color: #ec4899; }
+    .muted { color: #9aa0b8; font-size: 13px; margin-bottom: 16px; }
+
+    label { display: block; font-size: 13px; font-weight: 700; color: #9aa0b8; margin: 12px 0 5px; }
+    input, select {
+        width: 100%; padding: 10px 12px; border-radius: 8px;
+        background: #0a0a14; color: #e9eaf6;
+        border: 1px solid #2a2a42; font-size: 14px;
+    }
+    input:focus, select:focus { outline: none; border-color: #3d7bff; }
+
+    .user-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+    .user-card {
+        background: #14142a; border: 1px solid #2a2a42; border-radius: 10px;
+        padding: 12px; cursor: pointer; transition: .2s; text-align: left;
+    }
+    .user-card:hover { border-color: #ec4899; transform: translateY(-2px); }
+    .user-card .u-name { font-weight: 800; font-size: 14px; }
+    .user-card .u-mail { font-size: 11px; color: #9aa0b8; }
+    .user-card .u-bal { font-size: 14px; color: #34d399; font-weight: 800; margin-top: 4px; }
+    .user-card small { font-size: 10px; color: #5c6379; }
+
+    /* ---------- APP LAYOUT ---------- */
+    .wrap { max-width: 900px; margin: 0 auto; padding: 20px 16px; }
+    .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+    .tab {
+        background: #16162a; color: #9aa0b8; border: 1px solid #2a2a42;
+        padding: 8px 16px; border-radius: 30px; cursor: pointer; font-size: 14px; font-weight: 700;
+    }
+    .tab.on { background: linear-gradient(135deg, #3d7bff, #ec4899); color: #fff; border-color: transparent; }
+
+    .panel { display: none; animation: fade .25s; }
+    .panel.on { display: block; }
+    @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+
+    .card {
+        background: #0e0e1a; border: 1px solid #23233a;
+        border-radius: 12px; padding: 20px; margin-bottom: 16px;
+    }
+    .card h3 { font-size: 16px; margin-bottom: 10px; }
+
+    .balance-card {
+        background: linear-gradient(135deg, #1d4ed8, #7c3aed, #ec4899);
+        border-radius: 14px; padding: 24px; margin-bottom: 18px; color: #fff;
+        box-shadow: 0 12px 30px rgba(80, 60, 255, .4);
+    }
+    .balance-card .lbl { font-size: 12px; letter-spacing: 2px; opacity: .9; }
+    .balance-card .amt { font-size: 34px; font-weight: 800; margin: 4px 0; }
+    .balance-card .sub { font-size: 13px; opacity: .9; }
+
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 700px) { .grid2 { grid-template-columns: 1fr; } }
+
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th { text-align: left; background: #0b0b16; color: #9aa0b8; padding: 10px 12px; font-size: 12px; text-transform: uppercase; }
+    td { padding: 10px 12px; border-bottom: 1px solid #1d1d30; }
+    tr:hover td { background: #14142a; }
+    .in { color: #34d399; font-weight: 700; }
+    .out { color: #f43f5e; font-weight: 700; }
+    .tag { font-size: 12px; padding: 2px 10px; border-radius: 20px; }
+    .tag.ok { background: #12382a; color: #34d399; }
+    .tag.no { background: #3a1420; color: #f43f5e; }
+
+    .empty { text-align: center; color: #5c6379; padding: 20px; }
+
+    #toast {
+        position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(30px);
+        background: #16162a; color: #e9eaf6; padding: 12px 22px; border-radius: 10px;
+        border-left: 4px solid #3d7bff; font-size: 14px; opacity: 0; transition: .3s;
+        pointer-events: none; box-shadow: 0 10px 30px rgba(0,0,0,.5); white-space: nowrap; max-width: 92vw;
+    }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    #toast.err { border-left-color: #f43f5e; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+    <div class="logo">
+        <div class="badge">₹</div>
+        Student<span class="em">Bank</span>
+    </div>
+    <div class="logo" id="header-user"></div>
+</div>
+
+<!-- ================= LOGIN (data based, no OTP) ================= -->
+<div id="screen-login">
+    <div class="login-card">
+        <h2>Simple <span>Banking</span></h2>
+        <p class="muted">Click any user to login — data-based demo, no OTP needed.</p>
+
+        <div class="user-grid" id="login-users"></div>
+
+        <form id="login-form" style="margin-top:20px">
+            <label>Email</label>
+            <input type="email" id="li-email" placeholder="user@bank.com">
+            <label>Password (any)</label>
+            <input type="password" id="li-password" placeholder="••••••">
+            <button type="submit" class="btn block" style="margin-top:12px">Login →</button>
+        </form>
+        <p class="muted" style="margin-top:14px">Admin: <code style="color:#ec4899">admin@bank.com</code> — data reset hota hai dashboard se.</p>
+    </div>
+</div>
+
+<!-- ================= APP ================= -->
+<div class="wrap" id="app" style="display:none">
+
+    <div class="balance-card">
+        <div class="lbl">TOTAL BALANCE</div>
+        <div class="amt" id="bal">₹0</div>
+        <div class="sub" id="bal-sub">Account: —</div>
+    </div>
+
+    <div class="tabs">
+        <button class="tab on" data-panel="home">🏠 Home</button>
+        <button class="tab" data-panel="txn">💸 Deposit / Withdraw</button>
+        <button class="tab" data-panel="transfer">⇄ Transfer</button>
+        <button class="tab" data-panel="history">📜 History</button>
+        <button class="tab" data-panel="emi">📊 EMI</button>
+        <button class="tab" data-panel="loan">💰 Apply Loan</button>
+        <button class="tab" data-panel="admin">🛡 Admin</button>
+    </div>
+
+    <!-- HOME -->
+    <div class="panel on" id="panel-home">
+        <div class="card">
+            <h3>Recent Transactions</h3>
+            <div id="home-txn"></div>
+        </div>
+    </div>
+
+    <!-- DEPOSIT / WITHDRAW -->
+    <div class="panel" id="panel-txn">
+        <div class="grid2">
+            <div class="card">
+                <h3>Deposit Money</h3>
+                <label>Amount (₹)</label>
+                <input type="number" id="dep-amt" placeholder="e.g. 5000">
+                <button class="btn green block" id="btn-dep" style="margin-top:12px">+ Deposit</button>
+            </div>
+            <div class="card">
+                <h3>Withdraw Money</h3>
+                <label>Amount (₹)</label>
+                <input type="number" id="wit-amt" placeholder="e.g. 2000">
+                <button class="btn red block" id="btn-wit" style="margin-top:12px">− Withdraw</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TRANSFER -->
+    <div class="panel" id="panel-transfer">
+        <div class="card">
+            <h3>Transfer Money</h3>
+            <label>To Account (email ya click)</label>
+            <input type="text" id="tr-to" placeholder="friend@bank.com">
+            <label>Amount (₹)</label>
+            <input type="number" id="tr-amt" placeholder="500">
+            <button class="btn block" id="btn-tr" style="margin-top:12px">Transfer →</button>
+        </div>
+    </div>
+
+    <!-- HISTORY -->
+    <div class="panel" id="panel-history">
+        <div class="card">
+            <h3>All Transactions</h3>
+            <div id="history-list"></div>
+        </div>
+    </div>
+
+    <!-- EMI -->
+    <div class="panel" id="panel-emi">
+        <div class="card">
+            <h3>EMI Calculator</h3>
+            <label>Loan Amount (₹)</label>
+            <input type="number" id="emi-p" value="500000">
+            <label>Interest Rate (%)</label>
+            <input type="number" id="emi-r" value="9.5" step="0.1">
+            <label>Tenure (Months)</label>
+            <input type="number" id="emi-n" value="60">
+            <button class="btn block" id="btn-emi" style="margin-top:12px">Calculate EMI</button>
+            <div id="emi-out" class="card" style="margin-top:14px;display:none"></div>
+        </div>
+    </div>
+
+    <!-- LOAN -->
+    <div class="panel" id="panel-loan">
+        <div class="card">
+            <h3>Apply for a Loan</h3>
+            <label>Loan Type</label>
+            <select id="ln-type">
+                <option>Personal Loan</option><option>Home Loan</option>
+                <option>Car Loan</option><option>Education Loan</option>
+            </select>
+            <label>Amount (₹)</label>
+            <input type="number" id="ln-amt" placeholder="100000">
+            <label>Tenure (Months)</label>
+            <input type="number" id="ln-tenure" placeholder="24">
+            <button class="btn block" id="btn-ln" style="margin-top:12px">Apply Loan</button>
+            <div id="loan-status" style="margin-top:14px"></div>
+        </div>
+    </div>
+
+    <!-- ADMIN -->
+    <div class="panel" id="panel-admin">
+        <div class="card">
+            <div class="header" style="justify-content:space-between;width:100%;display:flex;align-items:center;gap:10px;background:none;border:none;padding:0;margin-bottom:12px">
+                <h3 style="margin:0">Manage Users (Admin)</h3>
+                <button class="btn small ghost" id="btn-reset-data">🔄 Reset Random Data</button>
+            </div>
+            <table>
+                <thead><tr><th>Name</th><th>Email</th><th>Balance</th><th>Status</th><th>Action</th></tr></thead>
+                <tbody id="admin-users"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ================ RANDOM DATA (no OTP, data based) ================
+const FIRST = ['Rahul', 'Priya', 'Aman', 'Sneha', 'Vikas', 'Kavya', 'Rohit', 'Anjali', 'Sameer', 'Divya'];
+const LAST = ['Sharma', 'Verma', 'Gupta', 'Iyer', 'Singh', 'Patel', 'Nair', 'Jain', 'Kapoor', 'Mehta'];
+const CITIES = ['Indore', 'Bhopal', 'Pune', 'Jaipur', 'Mumbai', 'Delhi'];
+const ITEMS = ['Swiggy', 'Amazon', 'Petrol', 'Electricity Bill', 'Mobile Recharge', 'Rent', 'Groceries', 'Netflix', 'Ola', 'EMI Payment', 'Salary', 'BigBasket', 'Flipkart', 'Insurance'];
+
+let users = [];   // full database (random data)
+let currentUser = null;   // logged-in user
+const KEY = 'simple_bank_v1';
+
+function rand(n) { return Math.floor(Math.random() * n); }
+function pick(arr) { return arr[rand(arr.length)]; }
+
+// ---------- random user generator ----------
+function randomUser(i, role) {
+    const name = pick(FIRST) + ' ' + pick(LAST);
+    const email = name.toLowerCase().replace(' ', '.') + (i + 1) + '@bank.com';
+    const bal = 5000 + rand(495000);
+    const txns = [];
+    for (let k = 0; k < 6 + rand(8); k++) {
+        const type = rand(3) === 0 ? 'Deposit' : rand(3) === 0 ? 'Withdraw' : 'Transfer';
+        const amt = 200 + rand(20000);
+        txns.push({ type: type, desc: type === 'Deposit' ? 'Cash deposit' : type === 'Withdraw' ? pick(ITEMS) : 'To ' + pick(FIRST) + '@bank.com', amount: amt, date: randomDate() });
+    }
+    return { name: name, email: email, password: '1234', role: role || 'User', balance: bal, blocked: false, txns: txns, loans: [] };
+}
+
+function randomDate() {
+    const d = new Date();
+    d.setDate(d.getDate() - rand(30));
+    return d.toLocaleDateString('en-IN') + ' ' + d.toLocaleTimeString('en-IN');
+}
+
+// ---------- build fresh random database ----------
+function buildRandomDB() {
+    users = [randomUser(0, 'Admin')];
+    users[0].name = 'Admin'; users[0].email = 'admin@bank.com';
+    for (let i = 1; i <= 9; i++) users.push(randomUser(i));
+}
+
+// ---------- load / save ----------
+function saveAll() { localStorage.setItem(KEY, JSON.stringify(users)); }
+function loadAll() {
+    try {
+        const d = JSON.parse(localStorage.getItem(KEY));
+        if (d && d.length) { users = d; return; }
+    } catch (e) { /* ignore */ }
+    buildRandomDB();
+    saveAll();
+}
+
+// ---------- helpers ----------
+function format(n) { return '₹' + Number(n || 0).toLocaleString('en-IN'); }
+function findUser(email) { return users.find(u => u.email.toLowerCase() === email.toLowerCase()); }
+
+function toast(msg, err) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'show' + (err ? ' err' : '');
+    setTimeout(function () { t.className = ''; }, 2500);
+}
+
+// ---------- session ----------
+function setSession(email) {
+    localStorage.setItem(KEY + '_session', email);
+    currentUser = findUser(email);
+}
+
+// ---------- login (data based, no OTP) ----------
+function renderLoginUsers() {
+    document.getElementById('login-users').innerHTML = users.map(function (u, i) {
+        return '<button class="user-card" onclick="quickLogin(\'' + u.email + '\')">' +
+            '<div class="u-name">' + (i === 0 ? '🛡 ' : '👤 ') + u.name + '</div>' +
+            '<div class="u-mail">' + u.email + '</div>' +
+            '<div class="u-bal">' + format(u.balance) + '</div>' +
+            '<small>Account No: 1000' + (1234 + i) + '</small></button>';
+    }).join('');
+}
+
+function quickLogin(email) {
+    const u = findUser(email);
+    if (!u) return toast('User not found', true);
+    if (u.blocked) return toast('Account blocked', true);
+    setSession(u.email);
+    showApp();
+}
+
+// ---------- screen switching ----------
+function showApp() {
+    document.getElementById('screen-login').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    document.getElementById('header-user').innerHTML =
+        '<span>👤 ' + currentUser.name + ' (' + currentUser.role + ')</span>' +
+        '<button class="btn small ghost" id="btn-logout">Logout</button>';
+    document.getElementById('btn-logout').onclick = function () {
+        localStorage.removeItem(KEY + '_session');
+        location.reload();
+    };
+    // admin tab only for admin
+    document.querySelectorAll('.tab[data-panel="admin"]')[0].style.display =
+        currentUser.role === 'Admin' ? '' : 'none';
+    refresh();
+}
+
+// ---------- refresh all ----------
+function refresh() {
+    document.getElementById('bal').textContent = format(currentUser.balance);
+    document.getElementById('bal-sub').textContent =
+        'Account: ' + currentUser.email + ' · ' + currentUser.role;
+    renderHome();
+    renderHistory();
+    renderLoans();
+    if (currentUser.role === 'Admin') renderAdminUsers();
+}
+
+// ---------- deposit / withdraw / transfer ----------
+function deposit(amt) {
+    if (!amt || amt <= 0) return toast('Enter a valid amount', true);
+    currentUser.balance += amt;
+    currentUser.txns.unshift({ type: 'Deposit', desc: 'Cash deposit', amount: amt, date: nowStr() });
+    saveAll(); refresh();
+    toast('Deposited ' + format(amt));
+}
+
+function withdraw(amt) {
+    if (!amt || amt <= 0) return toast('Enter a valid amount', true);
+    if (amt > currentUser.balance) return toast('Not enough balance!', true);
+    currentUser.balance -= amt;
+    currentUser.txns.unshift({ type: 'Withdraw', desc: 'Cash withdrawal', amount: amt, date: nowStr() });
+    saveAll(); refresh();
+    toast('Withdrawn ' + format(amt));
+}
+
+function transfer(toEmail, amt) {
+    if (!amt || amt <= 0) return toast('Enter a valid amount', true);
+    const to = findUser(toEmail);
+    if (!to) return toast('Recipient not found', true);
+    if (to.email === currentUser.email) return toast('Cannot send to yourself', true);
+    if (amt > currentUser.balance) return toast('Not enough balance!', true);
+
+    currentUser.balance -= amt;
+    to.balance += amt;
+    currentUser.txns.unshift({ type: 'Transfer', desc: 'To ' + to.email, amount: amt, date: nowStr() });
+    to.txns.unshift({ type: 'Transfer', desc: 'From ' + currentUser.email, amount: amt, date: nowStr() });
+    saveAll(); refresh();
+    toast('Sent ' + format(amt) + ' to ' + to.email);
+}
+
+function nowStr() {
+    const d = new Date();
+    return d.toLocaleDateString('en-IN') + ' ' + d.toLocaleTimeString('en-IN');
+}
+
+// ---------- EMI ----------
+function emiValue(P, R, N) {
+    const r = R / 12 / 100;
+    if (r === 0) return P / N;
+    return P * r * Math.pow(1 + r, N) / (Math.pow(1 + r, N) - 1);
+}
+
+// ---------- render ----------
+function rowHtml(x) {
+    const plus = x.type === 'Deposit';
+    return '<tr><td>' + x.date + '</td><td>' + x.type + '</td><td>' + x.desc + '</td>' +
+        '<td class="' + (plus ? 'in' : 'out') + '">' + (plus ? '+' : '-') + format(x.amount) + '</td></tr>';
+}
+
+function renderHome() {
+    const list = currentUser.txns.slice(0, 5);
+    document.getElementById('home-txn').innerHTML =
+        '<table><thead><tr><th>Date</th><th>Type</th><th>Details</th><th>Amount</th></tr></thead><tbody>' +
+        (list.length ? list.map(rowHtml).join('') : '<tr><td colspan="4"><div class="empty">No transactions yet.</div></td></tr>') +
+        '</tbody></table>';
+}
+
+function renderHistory() {
+    document.getElementById('history-list').innerHTML =
+        '<table><thead><tr><th>Date</th><th>Type</th><th>Details</th><th>Amount</th></tr></thead><tbody>' +
+        (currentUser.txns.length ? currentUser.txns.map(rowHtml).join('') : '<tr><td colspan="4"><div class="empty">No transactions.</div></td></tr>') +
+        '</tbody></table>';
+}
+
+function renderLoans() {
+    const loans = currentUser.loans || [];
+    document.getElementById('loan-status').innerHTML = loans.length
+        ? loans.map(function (l) {
+            return '<div style="padding:8px 12px;border:1px solid #23233a;border-radius:8px;margin:6px 0;font-size:14px">' +
+                l.type + ' · ' + format(l.amount) + ' · EMI ' + format(l.emi) +
+                ' <span class="tag ' + (l.status === 'Approved' ? 'ok' : 'no') + '">' + l.status + '</span></div>';
+        }).join('')
+        : '<div class="empty">No loans applied.</div>';
+}
+
+function toggleBlock(email) {
+    const u = findUser(email);
+    u.blocked = !u.blocked;
+    saveAll(); renderAdminUsers();
+    toast(u.blocked ? u.name + ' blocked' : u.name + ' unblocked');
+}
+
+function renderAdminUsers() {
+    document.getElementById('admin-users').innerHTML = users.map(function (u) {
+        return '<tr><td>' + u.name + '</td><td>' + u.email + '</td><td>' + format(u.balance) + '</td>' +
+            '<td><span class="tag ' + (u.blocked ? 'no' : 'ok') + '">' + (u.blocked ? 'Blocked' : 'Active') + '</span></td>' +
+            '<td><button class="btn small red" onclick="toggleBlock(\'' + u.email + '\')">' +
+            (u.blocked ? 'Unblock' : 'Block') + '</button></td></tr>';
+    }).join('');
+}
+
+// ---------- events ----------
+function bindEvents() {
+    document.getElementById('login-form').onsubmit = function (e) {
+        e.preventDefault();
+        quickLogin(document.getElementById('li-email').value);
+    };
+
+    document.getElementById('btn-dep').onclick = function () {
+        deposit(parseFloat(document.getElementById('dep-amt').value));
+    };
+    document.getElementById('btn-wit').onclick = function () {
+        withdraw(parseFloat(document.getElementById('wit-amt').value));
+    };
+    document.getElementById('btn-tr').onclick = function () {
+        transfer(
+            document.getElementById('tr-to').value.trim(),
+            parseFloat(document.getElementById('tr-amt').value)
+        );
+    };
+
+    document.getElementById('btn-reset-data').onclick = function () {
+        buildRandomDB();
+        saveAll();
+        toast('Fresh random data generated!', false);
+        if (currentUser && currentUser.role === 'Admin') renderAdminUsers();
+    };
+
+    // tabs
+    document.querySelectorAll('.tab').forEach(function (t) {
+        t.onclick = function () {
+            document.querySelectorAll('.tab').forEach(function (x) { x.classList.remove('on'); });
+            document.querySelectorAll('.panel').forEach(function (x) { x.classList.remove('on'); });
+            t.classList.add('on');
+            document.getElementById('panel-' + t.dataset.panel).classList.add('on');
+        };
+    });
+
+    // EMI
+    document.getElementById('btn-emi').onclick = function () {
+        const P = parseFloat(document.getElementById('emi-p').value);
+        const R = parseFloat(document.getElementById('emi-r').value);
+        const N = parseInt(document.getElementById('emi-n').value, 10);
+        if (!P || !R || !N) return toast('Fill all fields', true);
+        const emi = emiValue(P, R, N);
+        document.getElementById('emi-out').style.display = 'block';
+        document.getElementById('emi-out').innerHTML =
+            '<b>Monthly EMI: ' + format(Math.round(emi)) + '</b><br>' +
+            'Total payable: ' + format(Math.round(emi * N)) +
+            ' · Interest: ' + format(Math.round(emi * N - P));
+    };
+
+    // loan
+    document.getElementById('btn-ln').onclick = function () {
+        const amt = parseFloat(document.getElementById('ln-amt').value);
+        const N = parseInt(document.getElementById('ln-tenure').value, 10);
+        if (!amt || !N) return toast('Enter amount and tenure', true);
+        const emi = emiValue(amt, 10, N);
+        currentUser.loans = currentUser.loans || [];
+        currentUser.loans.unshift({
+            type: document.getElementById('ln-type').value,
+            amount: amt, emi: Math.round(emi), tenure: N, rate: 10, status: 'Pending'
+        });
+        saveAll(); renderLoans();
+        toast('Loan applied! Status: Pending');
+    };
+}
+
+// ---------- START ----------
+loadAll();
+renderLoginUsers();
+bindEvents();
+</script>
+</body>
+</html>
