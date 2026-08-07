@@ -60,7 +60,7 @@ body {
     backdrop-filter: blur(8px);
 }
 .login-brand { display: flex; align-items: center; gap: 14px; margin-bottom: 26px; }
-.brand-logo { width: 54px; height: 54px; }
+.brand-logo { width: 40px; height: 40px; }
 .login-brand h1 { font-size: 26px; letter-spacing: .5px; }
 .login-brand p { color: var(--muted); font-size: 12.5px; margin-top: 2px; }
 .login-card h2 { font-size: 19px; margin-bottom: 6px; }
@@ -138,7 +138,7 @@ textarea.input { resize: vertical; font-family: inherit; }
     position: sticky; top: 0; height: 100vh;
 }
 .side-brand { display: flex; align-items: center; gap: 12px; padding: 20px 18px; border-bottom: 1px solid var(--line); }
-.brand-logo-sm { width: 42px; height: 42px; }
+.brand-logo-sm { width: 32px; height: 32px; }
 .side-brand b { font-size: 18px; }
 .side-brand small { display: block; color: var(--muted); font-size: 11px; }
 
