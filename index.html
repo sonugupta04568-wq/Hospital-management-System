@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediCare Hospital Management System</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Top Notification Bar -->
+    <div class="topbar">
+        <div class="container topbar-inner">
+            <div class="topbar-item">
+                <span class="dot"></span> Emergency (24x7): <a href="tel:+919876543210">+91 98765 43210</a> &nbsp;|&nbsp;
+                <span class="dot"></span> Helpline: <a href="tel:18009876543">1800-987-6543</a> &nbsp;|&nbsp;
+                <span class="dot"></span> Appointments: <a href="tel:+919123456780">+91 91234 56780</a> &nbsp;|&nbsp;
+                <a href="mailto:care@medicare.in">care@medicare.in</a>
+            </div>
+            <div class="topbar-item">
+                Open 24/7 &mdash; Online &amp; Offline Consultations
+            </div>
+        </div>
+    </div>
+
+    <!-- Header / Nav -->
+    <header class="header">
+        <div class="container header-inner">
+            <div class="logo">
+                <span class="logo-icon">&#128657;</span>
+                <div class="logo-text">
+                    Medi<span class="accent">Care</span>
+                    <small>Hospital Management System</small>
+                </div>
+            </div>
+            <nav class="nav">
+                <a href="#" data-view="dashboard" class="active">Dashboard</a>
+                <a href="#" data-view="doctors">Doctors</a>
+                <a href="#" data-view="schedule">Doctor Schedule</a>
+                <a href="#" data-view="appointments">Appointments</a>
+                <a href="#" data-view="patients">Patients</a>
+                <a href="#" data-view="hospital">Hospital &amp; Contact</a>
+            </nav>
+            <button class="btn btn-danger" id="btn-book-now">Book Appointment</button>
+        </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero" id="hero">
+        <div class="container">
+            <h1>Priority Care, 24 Hours a Day<br>Online &amp; Offline</h1>
+            <p>Book doctor consultations, view shift-wise schedules and manage your personal
+                appointments &mdash; all in one place. Emergency services are open 24x7, every day of the year.</p>
+            <div class="hero-actions">
+                <button class="btn btn-danger" data-goto="appointments">Book an Appointment</button>
+                <button class="btn btn-outline" data-goto="doctors">Meet Our Doctors</button>
+            </div>
+            <div class="hero-strip">
+                <span>&#128222; <b>24x7 Emergency:</b> <a href="tel:+919876543210">+91 98765 43210</a></span>
+                <span>&#128172; <b>Helpline:</b> <a href="tel:18009876543">1800-987-6543</a></span>
+                <span>&#128247; Online &amp; Offline Consultations Available</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- MAIN CONTENT -->
+    <main class="container">
+
+        <!-- DASHBOARD -->
+        <section id="view-dashboard" class="view active">
+            <div class="section-head">
+                <h2>Hospital Dashboard</h2>
+                <p>Live overview of departments, doctors and today's load.</p>
+            </div>
+            <div class="emergency-banner">
+                <div>
+                    <b>&#128680; Emergency Services Open 24 Hours x 7 Days</b>
+                    <div class="muted">Ambulance, ICU, Emergency ward &amp; Pharmacy — always available.</div>
+                </div>
+                <div class="emergency-actions">
+                    <span class="muted">Call:</span>
+                    <a class="btn btn-danger btn-small" href="tel:+919876543210">+91 98765 43210</a>
+                    <a class="btn btn-danger btn-small" href="tel:18009876543">Helpline 1800-987-6543</a>
+                </div>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">&#128657;</div>
+                    <div class="stat-num" id="stat-doctors">0</div>
+                    <div class="stat-label">Doctors</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">&#128659;</div>
+                    <div class="stat-num" id="stat-patients">0</div>
+                    <div class="stat-label">Patients</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">&#128197;</div>
+                    <div class="stat-num" id="stat-appointments">0</div>
+                    <div class="stat-label">Total Appointments</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-num" id="stat-today">0</div>
+                    <div class="stat-label">Today's Appointments</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">&#128647;</div>
+                    <div class="stat-num" id="stat-departments">0</div>
+                    <div class="stat-label">Departments</div>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <h3>Today's Shifts</h3>
+                    <p class="muted">Which doctors are on duty right now.</p>
+                    <div id="dashboard-shifts"></div>
+                </div>
+                <div class="card">
+                    <h3>Upcoming Appointments</h3>
+                    <p class="muted">Latest booked appointments in the system.</p>
+                    <div id="dashboard-appointments"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DOCTORS -->
+        <section id="view-doctors" class="view">
+            <div class="section-head">
+                <h2>Our Doctors</h2>
+                <p>Search specialists and contact them directly. (Database sample data)</p>
+            </div>
+            <div class="toolbar">
+                <input type="text" id="doctor-search" class="input" placeholder="Search by name, specialty or department...">
+                <select id="doctor-dept-filter" class="input">
+                    <option value="">All Departments</option>
+                </select>
+            </div>
+            <div id="doctors-grid" class="doctors-grid"></div>
+        </section>
+
+        <!-- SCHEDULE -->
+        <section id="view-schedule" class="view">
+            <div class="section-head">
+                <h2>Doctor Schedule</h2>
+                <p>Shift-wise weekly schedule. Select a doctor and date to see their duty shift and timing.</p>
+            </div>
+            <div class="toolbar">
+                <select id="schedule-doctor" class="input"></select>
+                <input type="date" id="schedule-date" class="input">
+            </div>
+            <div class="grid-2">
+                <div class="card" id="schedule-detail">
+                    <h3>Shift Details</h3>
+                    <div class="muted">Select a doctor and date to see the shift.</div>
+                    <br>
+                    <div class="shift-summary" id="schedule-summary"></div>
+                </div>
+                <div class="card">
+                    <h3>Weekly Roster</h3>
+                    <div class="muted">Full week view for the selected doctor.</div>
+                    <div id="weekly-roster" class="roster"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- APPOINTMENTS -->
+        <section id="view-appointments" class="view">
+            <div class="section-head">
+                <h2>Appointments</h2>
+                <p>Book a new appointment with your preferred doctor and manage your personal appointments.</p>
+            </div>
+            <div class="grid-2">
+                <div class="card">
+                    <h3>Book New Appointment</h3>
+                    <form id="appointment-form">
+                        <label>Patient Full Name *</label>
+                        <input type="text" id="appt-name" class="input" required>
+
+                        <label>Gender *</label>
+                        <select id="appt-gender" class="input" required>
+                            <option value="">-- Select Gender --</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+
+                        <label>Phone Number *</label>
+                        <input type="tel" id="appt-phone" class="input" required>
+
+                        <label>Email *</label>
+                        <input type="email" id="appt-email" class="input" required>
+
+                        <label>Select Department</label>
+                        <select id="appt-dept" class="input"></select>
+
+                        <div class="doctor-row">
+                            <div style="flex:1">
+                                <label>Select Doctor *</label>
+                                <select id="appt-doctor" class="input"></select>
+                            </div>
+                            <button type="button" class="btn btn-gray" id="btn-random-doctor"
+                                title="Attach a random available doctor">&#127922; Random Doctor</button>
+                        </div>
+                        <div id="random-doctor-info" class="random-info muted"></div>
+
+                        <label>Consultation Mode *</label>
+                        <select id="appt-mode" class="input">
+                            <option value="offline">Offline (Visit Hospital)</option>
+                            <option value="online">Online (Video / Phone Consultation)</option>
+                        </select>
+
+                        <label>Appointment Date *</label>
+                        <input type="date" id="appt-date" class="input" required>
+
+                        <label>Available Time Slots (from doctor's shift)</label>
+                        <div id="slot-picker" class="slot-picker">
+                            <span class="muted">Choose a doctor &amp; date to see available slots.</span>
+                        </div>
+
+                        <label>Reason / Symptoms</label>
+                        <textarea id="appt-reason" class="input" rows="3"
+                            placeholder="Describe your symptoms briefly..."></textarea>
+
+                        <button type="submit" class="btn btn-danger btn-block">Confirm Appointment</button>
+                    </form>
+                </div>
+                <div class="card">
+                    <h3>My Appointments</h3>
+                    <div class="toolbar">
+                        <input type="text" id="appt-search" class="input" placeholder="Search by name, doctor or phone...">
+                    </div>
+                    <div id="appointments-list"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PATIENTS -->
+        <section id="view-patients" class="view">
+            <div class="section-head">
+                <h2>Patient Directory</h2>
+                <p>Registered patients in the hospital database.</p>
+            </div>
+            <div class="toolbar">
+                <input type="text" id="patient-search" class="input" placeholder="Search patients...">
+            </div>
+            <div class="table-wrap">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Patient ID</th>
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th>Blood Group</th>
+                            <th>Age</th>
+                            <th>Appointments</th>
+                        </tr>
+                    </thead>
+                    <tbody id="patients-tbody"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- HOSPITAL & CONTACT -->
+        <section id="view-hospital" class="view">
+            <div class="section-head">
+                <h2>Hospital &amp; Contact</h2>
+                <p>Locations, contact details, opening times and hospital management information.</p>
+            </div>
+            <div class="grid-3">
+                <div class="card contact-card">
+                    <h3>Emergency / Contact</h3>
+                    <p><b>24x7 Emergency:</b> <a href="tel:+919876543210">+91 98765 43210</a></p>
+                    <p><b>24x7 Helpline:</b> <a href="tel:18009876543">1800-987-6543</a></p>
+                    <p><b>Appointments:</b> <a href="tel:+919123456780">+91 91234 56780</a></p>
+                    <p><b>Reception:</b> <a href="tel:+91120000000">+91 9120 000 000</a></p>
+                    <p><b>Email:</b> <a href="mailto:care@medicare.in">care@medicare.in</a></p>
+                    <p><b>Email:</b> <a href="mailto:appointments@medicare.in">appointments@medicare.in</a></p>
+                </div>
+                <div class="card contact-card">
+                    <h3>🗺 Locations</h3>
+                    <p><b>Main Campus</b><br>12, Health Avenue, MG Road, Indore, MP - 452001</p>
+                    <p><b>City Branch</b><br>45, Green Park, Vijay Nagar, Indore, MP - 452010</p>
+                    <p><b>North Wing</b><br>8, Ring Road, Bhopal, MP - 462001</p>
+                </div>
+                <div class="card contact-card">
+                    <h3>🕒 Emergency Open 24x7</h3>
+                    <p><b>Emergency / ICU:</b> Open 24 &times; 7, all year</p>
+                    <p><b>Ambulance:</b> Available 24 &times; 7</p>
+                    <p><b>Pharmacy:</b> Open 24 &times; 7</p>
+                    <p><b>OPD (Outpatient):</b> Mon &mdash; Sat, 8:00 AM &ndash; 8:00 PM</p>
+                    <p><b>Laboratory:</b> 7:00 AM &ndash; 10:00 PM</p>
+                    <p><b>Sunday:</b> Emergency 24x7 &amp; OPD (10 AM &ndash; 2 PM)</p>
+                    <h3 style="margin-top:18px">Consultation Options</h3>
+                    <p><b>Offline:</b> Visit hospital in person &mdash; the doctor consults you face-to-face.</p>
+                    <p><b>Online:</b> Video / phone consultation from home &mdash; book an online slot.</p>
+                    <h3 style="margin-top:18px">Shift Timings</h3>
+                    <p><b>Morning Shift:</b> 8:00 AM &ndash; 2:00 PM</p>
+                    <p><b>Evening Shift:</b> 2:00 PM &ndash; 8:00 PM</p>
+                    <p><b>Night Shift:</b> 8:00 PM &ndash; 8:00 AM</p>
+                </div>
+            </div>
+            <div class="card">
+                <h3>Contact any Doctor</h3>
+                <p class="muted">Call or email any doctor directly from the roster below.</p>
+                <div id="contact-doctors"></div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <p><b>24x7 Helpline:</b> <a href="tel:18009876543">1800-987-6543</a> &nbsp;|&nbsp;
+                <b>Emergency:</b> <a href="tel:+919876543210">+91 98765 43210</a></p>
+            <p>&copy; 2026 MediCare Hospitals. All rights reserved &mdash; Hospital Management System</p>
+            <p class="muted">For educational / demo purposes. Sample hospital database shown.</p>
+        </div>
+    </footer>
+
+    <!-- TOAST -->
+    <div id="toast" class="toast"></div>
+
+    <script src="js/data.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
