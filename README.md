@@ -23,10 +23,10 @@ A self-contained banking database system with a black / pink / blue theme and a 
 
 ```bash
 # option 1 — just open the file
-open bank-system/index.html
+open Nova-Bank/index.html
 
 # option 2 — localhost server
-cd bank-system
+cd Nova-Bank
 python -m http.server 8000
 # then visit http://localhost:8000
 ```
@@ -38,12 +38,12 @@ The app opens directly with an auto admin session (no login required).
 - Plain HTML + CSS + JavaScript (no frameworks, no build step)
 - Data persists in `localStorage`; a "Reset Sample Data" button reseeds the random database
 
-> Legacy files in this repo root (`index.html`, `css/`, `js/`, `banking-simple.html`) belong to an older NovaBank demo. The PrismBank system lives entirely in `bank-system/`.
+> Legacy files in this repo root (`index.html`, `css/`, `js/`, `banking-simple.html`) belong to an older NovaBank demo. The PrismBank system lives entirely in `Nova-Bank/`.
 
 ## Project structure
 
 ```
-bank-system/
+Nova-Bank/
 ├── index.html    # app shell, login/OTP UI, modals
 ├── css/style.css # black/pink/blue theme
 └── js/

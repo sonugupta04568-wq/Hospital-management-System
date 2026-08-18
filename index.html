@@ -3,565 +3,308 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NovaBank — Banking Management System</title>
+    <title>MediCare Hospital Management System</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-    <!-- TOP BAR -->
+    <!-- Top Notification Bar -->
     <div class="topbar">
         <div class="container topbar-inner">
             <div class="topbar-item">
-                <span class="dot"></span> 24x7 Customer Care: <a href="tel:18006682265">1800-NOVA-BANK</a> &nbsp;|&nbsp;
-                <span class="dot"></span> NetBanking Help: <a href="tel:18009876540">1800-887-6540</a> &nbsp;|&nbsp;
-                <a href="mailto:care@novabank.in">care@novabank.in</a>
+                <span class="dot"></span> Emergency (24x7): <a href="tel:+919876543210">+91 98765 43210</a> &nbsp;|&nbsp;
+                <span class="dot"></span> Helpline: <a href="tel:18009876543">1800-987-6543</a> &nbsp;|&nbsp;
+                <span class="dot"></span> Appointments: <a href="tel:+919123456780">+91 91234 56780</a> &nbsp;|&nbsp;
+                <a href="mailto:care@medicare.in">care@medicare.in</a>
             </div>
-            <div class="topbar-item" id="topbar-session"></div>
+            <div class="topbar-item">
+                Open 24/7 &mdash; Online &amp; Offline Consultations
+            </div>
         </div>
     </div>
 
-    <!-- HEADER -->
+    <!-- Header / Nav -->
     <header class="header">
         <div class="container header-inner">
             <div class="logo">
-                <svg viewBox="0 0 48 48" width="46" height="46" aria-hidden="true">
-                    <defs>
-                        <linearGradient id="lgN" x1="0" y1="0" x2="1" y2="1">
-                            <stop offset="0%" stop-color="#3d7bff"/>
-                            <stop offset="100%" stop-color="#ec4899"/>
-                        </linearGradient>
-                    </defs>
-                    <rect x="2" y="2" width="44" height="44" rx="13" fill="#0d0d16" stroke="url(#lgN)" stroke-width="2"/>
-                    <path d="M9 33h30M12 33v-9l12-7 12 7v9H12z" stroke="url(#lgN)" stroke-width="2.2" stroke-linejoin="round" fill="none"/>
-                    <path d="M17 24.5h3v7h-3zM22.5 24.5h3v7h-3zM28 24.5h3v7h-3z" stroke="url(#lgN)" stroke-width="1.8" stroke-linejoin="round" fill="none"/>
-                </svg>
+                <span class="logo-icon">&#128657;</span>
                 <div class="logo-text">
-                    Nova<span class="accent">Bank</span>
-                    <small>Banking Management System</small>
+                    Medi<span class="accent">Care</span>
+                    <small>Hospital Management System</small>
                 </div>
             </div>
-            <nav class="nav" id="main-nav"><!-- rendered by JS --></nav>
-            <div class="header-actions" id="header-user"></div>
+            <nav class="nav">
+                <a href="#" data-view="dashboard" class="active">Dashboard</a>
+                <a href="#" data-view="doctors">Doctors</a>
+                <a href="#" data-view="schedule">Doctor Schedule</a>
+                <a href="#" data-view="appointments">Appointments</a>
+                <a href="#" data-view="patients">Patients</a>
+                <a href="#" data-view="hospital">Hospital &amp; Contact</a>
+            </nav>
+            <button class="btn btn-danger" id="btn-book-now">Book Appointment</button>
         </div>
     </header>
 
-    <!-- AUTH SECTION -->
-    <section id="auth-section" class="auth-section">
-        <div class="auth-bg"></div>
-        <div class="auth-wrap">
-
-            <!-- LOGIN -->
-            <div class="auth-card" id="auth-login">
-                <h2>Login to your account</h2>
-                <p class="muted">Secure access with 2-Factor Authentication &amp; JWT sessions.</p>
-                <form id="login-form">
-                    <label>Email Address *</label>
-                    <input type="email" id="login-email" class="input" placeholder="you@example.com" required>
-                    <label>Password *</label>
-                    <div class="pwd-wrap">
-                        <input type="password" id="login-password" class="input" placeholder="••••••••" required>
-                        <button type="button" class="btn btn-icon" data-pwd-toggle="login-password">👁</button>
-                    </div>
-                    <div class="form-row-between">
-                        <label class="checkbox-line"><input type="checkbox" id="login-remember" checked> Remember me</label>
-                        <a href="#" id="link-forgot" class="link">Forgot password?</a>
-                    </div>
-                    <button type="submit" class="btn btn-grad btn-block">Sign In →</button>
-                </form>
-                <p class="auth-switch">New to NovaBank? <a href="#" id="link-register">Create an account</a></p>
-                <div class="demo-box">
-                    <b>Demo Credentials</b>
-                    <div>Admin &nbsp;<code>admin@novabank.in</code> / <code>Admin@123</code></div>
-                    <div>User &nbsp;&nbsp;<code>user@novabank.in</code> / <code>User@123</code></div>
-                </div>
+    <!-- HERO -->
+    <section class="hero" id="hero">
+        <div class="container">
+            <h1>Priority Care, 24 Hours a Day<br>Online &amp; Offline</h1>
+            <p>Book doctor consultations, view shift-wise schedules and manage your personal
+                appointments &mdash; all in one place. Emergency services are open 24x7, every day of the year.</p>
+            <div class="hero-actions">
+                <button class="btn btn-danger" data-goto="appointments">Book an Appointment</button>
+                <button class="btn btn-outline" data-goto="doctors">Meet Our Doctors</button>
             </div>
-
-            <!-- REGISTER -->
-            <div class="auth-card hidden" id="auth-register">
-                <h2>Open your free account</h2>
-                <p class="muted">Register in 30 seconds — OTP verification protects your identity.</p>
-                <form id="register-form">
-                    <label>Full Name *</label>
-                    <input type="text" id="reg-name" class="input" placeholder="e.g. Rohan Sharma" required>
-                    <label>Email Address *</label>
-                    <input type="email" id="reg-email" class="input" placeholder="you@example.com" required>
-                    <label>Mobile Number *</label>
-                    <input type="tel" id="reg-phone" class="input" placeholder="+91 98765 43210" required>
-                    <label>Password *</label>
-                    <div class="pwd-wrap">
-                        <input type="password" id="reg-password" class="input" placeholder="Min 6 characters" required>
-                        <button type="button" class="btn btn-icon" data-pwd-toggle="reg-password">👁</button>
-                    </div>
-                    <button type="submit" class="btn btn-grad btn-block">Register &amp; Verify OTP →</button>
-                </form>
-                <p class="auth-switch">Already a member? <a href="#" id="link-login">Sign in</a></p>
-            </div>
-
-            <!-- FORGOT -->
-            <div class="auth-card hidden" id="auth-forgot">
-                <h2>Reset your password</h2>
-                <p class="muted">We'll send a 6-digit OTP to your registered email to verify your identity.</p>
-                <form id="forgot-form">
-                    <label>Registered Email *</label>
-                    <input type="email" id="forgot-email" class="input" placeholder="you@example.com" required>
-                    <button type="submit" class="btn btn-grad btn-block">Send OTP →</button>
-                </form>
-                <p class="auth-switch"><a href="#" id="link-login2">Back to sign in</a></p>
+            <div class="hero-strip">
+                <span>&#128222; <b>24x7 Emergency:</b> <a href="tel:+919876543210">+91 98765 43210</a></span>
+                <span>&#128172; <b>Helpline:</b> <a href="tel:18009876543">1800-987-6543</a></span>
+                <span>&#128247; Online &amp; Offline Consultations Available</span>
             </div>
         </div>
     </section>
 
-    <!-- MAIN APP -->
-    <main class="container" id="app-main">
+    <!-- MAIN CONTENT -->
+    <main class="container">
 
-        <!-- ============ DASHBOARD ============ -->
-        <section id="view-dashboard" class="view">
+        <!-- DASHBOARD -->
+        <section id="view-dashboard" class="view active">
             <div class="section-head">
-                <h2>Welcome back, <span id="dash-user">…</span></h2>
-                <p>Your one-stop banking overview — balances, quick actions and recent activity.</p>
+                <h2>Hospital Dashboard</h2>
+                <p>Live overview of departments, doctors and today's load.</p>
             </div>
-
-            <div class="hero-balance">
-                <div class="hb-left">
-                    <span class="hb-label">TOTAL BALANCE</span>
-                    <div class="hb-amount" id="dash-total-balance">₹0.00</div>
-                    <div class="hb-sub" id="dash-acc-count">0 accounts</div>
+            <div class="emergency-banner">
+                <div>
+                    <b>&#128680; Emergency Services Open 24 Hours x 7 Days</b>
+                    <div class="muted">Ambulance, ICU, Emergency ward &amp; Pharmacy — always available.</div>
                 </div>
-                <div class="hb-right">
-                    <div class="quick-actions">
-                        <button class="qa" data-action="deposit"><span>⬇</span>Deposit</button>
-                        <button class="qa" data-action="withdraw"><span>⬆</span>Withdraw</button>
-                        <button class="qa" data-action="transfer"><span>⇄</span>Transfer</button>
-                        <button class="qa" data-action="upi"><span>📱</span>UPI Pay</button>
-                    </div>
+                <div class="emergency-actions">
+                    <span class="muted">Call:</span>
+                    <a class="btn btn-danger btn-small" href="tel:+919876543210">+91 98765 43210</a>
+                    <a class="btn btn-danger btn-small" href="tel:18009876543">Helpline 1800-987-6543</a>
                 </div>
             </div>
-
             <div class="stats-grid">
-                <div class="stat-card"><div class="stat-icon">🏦</div><div class="stat-num" id="dash-acc">0</div><div class="stat-label">Accounts</div></div>
-                <div class="stat-card"><div class="stat-icon">💰</div><div class="stat-num" id="dash-loans">0</div><div class="stat-label">Active Loans</div></div>
-                <div class="stat-card"><div class="stat-icon">💳</div><div class="stat-num" id="dash-cards">0</div><div class="stat-label">Cards</div></div>
-                <div class="stat-card"><div class="stat-icon">🔄</div><div class="stat-num" id="dash-txns">0</div><div class="stat-label">This Month Txns</div></div>
-                <div class="stat-card"><div class="stat-icon">⭐</div><div class="stat-num" id="dash-credit">N/A</div><div class="stat-label">Credit Score</div></div>
+                <div class="stat-card">
+                    <div class="stat-icon">&#128657;</div>
+                    <div class="stat-num" id="stat-doctors">0</div>
+                    <div class="stat-label">Doctors</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">&#128659;</div>
+                    <div class="stat-num" id="stat-patients">0</div>
+                    <div class="stat-label">Patients</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">&#128197;</div>
+                    <div class="stat-num" id="stat-appointments">0</div>
+                    <div class="stat-label">Total Appointments</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-num" id="stat-today">0</div>
+                    <div class="stat-label">Today's Appointments</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">&#128647;</div>
+                    <div class="stat-num" id="stat-departments">0</div>
+                    <div class="stat-label">Departments</div>
+                </div>
             </div>
 
             <div class="grid-2">
                 <div class="card">
-                    <h3>Recent Transactions</h3>
-                    <p class="muted">Your latest 6 movements across all accounts.</p>
-                    <div id="dash-txn-list"></div>
+                    <h3>Today's Shifts</h3>
+                    <p class="muted">Which doctors are on duty right now.</p>
+                    <div id="dashboard-shifts"></div>
                 </div>
                 <div class="card">
-                    <div class="card-flex">
-                        <h3>Notifications</h3>
-                        <button class="btn btn-sm btn-ghost" id="btn-clear-notifs">Clear all</button>
-                    </div>
-                    <div id="dash-notif-list"></div>
+                    <h3>Upcoming Appointments</h3>
+                    <p class="muted">Latest booked appointments in the system.</p>
+                    <div id="dashboard-appointments"></div>
                 </div>
             </div>
+        </section>
 
-            <div class="card" id="dash-accounts-mini">
-                <h3>Your Accounts at a Glance</h3>
-                <div class="acct-strip" id="dash-acct-strip"></div>
+        <!-- DOCTORS -->
+        <section id="view-doctors" class="view">
+            <div class="section-head">
+                <h2>Our Doctors</h2>
+                <p>Search specialists and contact them directly. (Database sample data)</p>
+            </div>
+            <div class="toolbar">
+                <input type="text" id="doctor-search" class="input" placeholder="Search by name, specialty or department...">
+                <select id="doctor-dept-filter" class="input">
+                    <option value="">All Departments</option>
+                </select>
+            </div>
+            <div id="doctors-grid" class="doctors-grid"></div>
+        </section>
+
+        <!-- SCHEDULE -->
+        <section id="view-schedule" class="view">
+            <div class="section-head">
+                <h2>Doctor Schedule</h2>
+                <p>Shift-wise weekly schedule. Select a doctor and date to see their duty shift and timing.</p>
+            </div>
+            <div class="toolbar">
+                <select id="schedule-doctor" class="input"></select>
+                <input type="date" id="schedule-date" class="input">
+            </div>
+            <div class="grid-2">
+                <div class="card" id="schedule-detail">
+                    <h3>Shift Details</h3>
+                    <div class="muted">Select a doctor and date to see the shift.</div>
+                    <br>
+                    <div class="shift-summary" id="schedule-summary"></div>
+                </div>
+                <div class="card">
+                    <h3>Weekly Roster</h3>
+                    <div class="muted">Full week view for the selected doctor.</div>
+                    <div id="weekly-roster" class="roster"></div>
+                </div>
             </div>
         </section>
 
-        <!-- ============ ACCOUNTS ============ -->
-        <section id="view-accounts" class="view">
+        <!-- APPOINTMENTS -->
+        <section id="view-appointments" class="view">
             <div class="section-head">
-                <h2>My Accounts</h2>
-                <p>Savings, Current &amp; Fixed Deposits. Open a new account anytime.</p>
+                <h2>Appointments</h2>
+                <p>Book a new appointment with your preferred doctor and manage your personal appointments.</p>
             </div>
-            <div class="toolbar">
-                <button class="btn btn-grad" id="btn-open-account">+ Open New Account</button>
-                <button class="btn btn-ghost" id="btn-gen-sample">🎲 Load Random Sample Data</button>
+            <div class="grid-2">
+                <div class="card">
+                    <h3>Book New Appointment</h3>
+                    <form id="appointment-form">
+                        <label>Patient Full Name *</label>
+                        <input type="text" id="appt-name" class="input" required>
+
+                        <label>Gender *</label>
+                        <select id="appt-gender" class="input" required>
+                            <option value="">-- Select Gender --</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+
+                        <label>Phone Number *</label>
+                        <input type="tel" id="appt-phone" class="input" required>
+
+                        <label>Email *</label>
+                        <input type="email" id="appt-email" class="input" required>
+
+                        <label>Select Department</label>
+                        <select id="appt-dept" class="input"></select>
+
+                        <div class="doctor-row">
+                            <div style="flex:1">
+                                <label>Select Doctor *</label>
+                                <select id="appt-doctor" class="input"></select>
+                            </div>
+                            <button type="button" class="btn btn-gray" id="btn-random-doctor"
+                                title="Attach a random available doctor">&#127922; Random Doctor</button>
+                        </div>
+                        <div id="random-doctor-info" class="random-info muted"></div>
+
+                        <label>Consultation Mode *</label>
+                        <select id="appt-mode" class="input">
+                            <option value="offline">Offline (Visit Hospital)</option>
+                            <option value="online">Online (Video / Phone Consultation)</option>
+                        </select>
+
+                        <label>Appointment Date *</label>
+                        <input type="date" id="appt-date" class="input" required>
+
+                        <label>Available Time Slots (from doctor's shift)</label>
+                        <div id="slot-picker" class="slot-picker">
+                            <span class="muted">Choose a doctor &amp; date to see available slots.</span>
+                        </div>
+
+                        <label>Reason / Symptoms</label>
+                        <textarea id="appt-reason" class="input" rows="3"
+                            placeholder="Describe your symptoms briefly..."></textarea>
+
+                        <button type="submit" class="btn btn-danger btn-block">Confirm Appointment</button>
+                    </form>
+                </div>
+                <div class="card">
+                    <h3>My Appointments</h3>
+                    <div class="toolbar">
+                        <input type="text" id="appt-search" class="input" placeholder="Search by name, doctor or phone...">
+                    </div>
+                    <div id="appointments-list"></div>
+                </div>
             </div>
-            <div id="accounts-grid" class="accounts-grid"></div>
         </section>
 
-        <!-- ============ CUSTOMERS ============ -->
-        <section id="view-customers" class="view">
+        <!-- PATIENTS -->
+        <section id="view-patients" class="view">
             <div class="section-head">
-                <h2>Customer Management</h2>
-                <p>View, add, update, search and delete bank customers. (Staff / Branch view)</p>
+                <h2>Patient Directory</h2>
+                <p>Registered patients in the hospital database.</p>
             </div>
             <div class="toolbar">
-                <input type="text" id="customer-search" class="input" placeholder="Search by name, email, phone, city...">
-                <button class="btn btn-grad" id="btn-add-customer">+ Add Customer</button>
+                <input type="text" id="patient-search" class="input" placeholder="Search patients...">
             </div>
             <div class="table-wrap">
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Customer ID</th><th>Name</th><th>Phone</th><th>Email</th><th>City</th><th>Accounts</th><th>Action</th>
+                            <th>Patient ID</th>
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th>Blood Group</th>
+                            <th>Age</th>
+                            <th>Appointments</th>
                         </tr>
                     </thead>
-                    <tbody id="customer-tbody"></tbody>
+                    <tbody id="patients-tbody"></tbody>
                 </table>
             </div>
         </section>
 
-        <!-- ============ TRANSACTIONS ============ -->
-        <section id="view-transactions" class="view">
+        <!-- HOSPITAL & CONTACT -->
+        <section id="view-hospital" class="view">
             <div class="section-head">
-                <h2>Transactions</h2>
-                <p>Deposit, withdraw, transfer funds or pay via UPI. Everything is logged &amp; secured.</p>
-            </div>
-
-            <div class="txn-tabs" id="txn-tabs">
-                <button class="tab active" data-tab="deposit">Deposit</button>
-                <button class="tab" data-tab="withdraw">Withdraw</button>
-                <button class="tab" data-tab="transfer">Fund Transfer</button>
-                <button class="tab" data-tab="upi">UPI Transfer</button>
-            </div>
-
-            <div class="txn-panel" id="txn-panel-deposit">
-                <div class="card">
-                    <h3>Deposit Money</h3>
-                    <form id="deposit-form">
-                        <label>To Account *</label><select id="dep-account" class="input"></select>
-                        <label>Amount (₹) *</label><input type="number" id="dep-amount" class="input" min="1" placeholder="e.g. 5000" required>
-                        <label>Mode *</label>
-                        <select id="dep-mode" class="input"><option>Cash</option><option>Cheque</option><option>RTGS</option><option>NEFT</option></select>
-                        <label>Note</label><input type="text" id="dep-note" class="input" placeholder="e.g. Savings deposit">
-                        <button type="submit" class="btn btn-grad btn-block">Deposit Now</button>
-                    </form>
-                </div>
-            </div>
-
-            <div class="txn-panel hidden" id="txn-panel-withdraw">
-                <div class="card">
-                    <h3>Withdraw Money</h3>
-                    <form id="withdraw-form">
-                        <label>From Account *</label><select id="wit-account" class="input"></select>
-                        <label>Amount (₹) *</label><input type="number" id="wit-amount" class="input" placeholder="e.g. 2000" required>
-                        <label>Mode *</label>
-                        <select id="wit-mode" class="input"><option>ATM</option><option>Counter</option><option>Cheque</option></select>
-                        <button type="submit" class="btn btn-grad btn-block">Withdraw</button>
-                    </form>
-                </div>
-            </div>
-
-            <div class="txn-panel hidden" id="txn-panel-transfer">
-                <div class="card">
-                    <h3>Fund Transfer</h3>
-                    <form id="transfer-form">
-                        <label>From Account *</label><select id="tr-account" class="input"></select>
-                        <label>Beneficiary Account Number *</label><input type="text" id="tr-beneficiary" class="input" placeholder="11 digit account number" required>
-                        <label>Beneficiary Name (for verification)</label><input type="text" id="tr-name" class="input" placeholder="Name on account">
-                        <label>Amount (₹) *</label><input type="number" id="tr-amount" class="input" placeholder="1000" required>
-                        <label>Reference</label><input type="text" id="tr-note" class="input" placeholder="e.g. Rent / Gift">
-                        <button type="submit" class="btn btn-grad btn-block">Transfer Funds</button>
-                    </form>
-                </div>
-            </div>
-
-            <div class="txn-panel hidden" id="txn-panel-upi">
-                <div class="card">
-                    <h3>UPI Transfer (Simulation)</h3>
-                    <form id="upi-form">
-                        <label>From Account *</label><select id="upi-account" class="input"></select>
-                        <label>Payee UPI ID *</label><input type="text" id="upi-id" class="input" placeholder="vyapar@novabank" required>
-                        <label>Amount (₹) *</label><input type="number" id="upi-amount" class="input" placeholder="500" required>
-                        <label>UPI PIN (for verification)</label><input type="password" id="upi-pin" class="input" placeholder="Simulated UPI PIN" required>
-                        <button type="submit" class="btn btn-grad btn-block">Pay via UPI</button>
-                    </form>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-flex">
-                    <h3>Transaction History</h3>
-                    <button class="btn btn-ghost" id="btn-mini-statement">🧾 Mini Statement</button>
-                </div>
-                <div class="toolbar">
-                    <input type="text" id="txn-search" class="input" placeholder="Search description / type...">
-                    <select id="txn-filter" class="input">
-                        <option value="">All Types</option>
-                        <option>Deposit</option><option>Withdrawal</option>
-                        <option>Transfer</option><option>UPI Pay</option><option>Interest</option>
-                    </select>
-                </div>
-                <div class="table-wrap">
-                    <table class="table">
-                        <thead><tr><th>Date</th><th>Account</th><th>Type</th><th>Description</th><th>Amount</th><th>Balance</th></tr></thead>
-                        <tbody id="txn-tbody"></tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <!-- ============ LOANS ============ -->
-        <section id="view-loans" class="view">
-            <div class="section-head">
-                <h2>Loan Management</h2>
-                <p>Apply for a loan, track approval &amp; calculate your EMI instantly.</p>
-            </div>
-            <div class="grid-2">
-                <div class="card">
-                    <h3>Apply for a Loan</h3>
-                    <form id="loan-form">
-                        <label>Loan Type *</label>
-                        <select id="loan-type" class="input">
-                            <option>Home Loan</option><option>Personal Loan</option><option>Car Loan</option>
-                            <option>Education Loan</option><option>Business Loan</option>
-                        </select>
-                        <label>Amount (₹) *</label><input type="number" id="loan-amount" class="input" placeholder="e.g. 5,00,000" required>
-                        <label>Tenure (Months) *</label><input type="number" id="loan-tenure" class="input" placeholder="e.g. 60" required>
-                        <label>Existing Monthly Income (₹)</label><input type="number" id="loan-income" class="input" placeholder="e.g. 60,000">
-                        <label>Purpose</label><textarea id="loan-purpose" class="input" rows="3" placeholder="Why do you need this loan?"></textarea>
-                        <button type="submit" class="btn btn-grad btn-block">Submit Application →</button>
-                    </form>
-                </div>
-                <div class="card">
-                    <h3>EMI Calculator</h3>
-                    <p class="muted">Instantly compute Equated Monthly Instalment.</p>
-                    <label>Principal (₹)</label><input type="number" id="emi-p" class="input" value="500000">
-                    <label>Annual Interest Rate (%)</label><input type="number" id="emi-r" class="input" value="9.5" step="0.1">
-                    <label>Tenure (Months)</label><input type="number" id="emi-n" class="input" value="60">
-                    <button class="btn btn-grad btn-block" id="btn-calc-emi">Calculate EMI →</button>
-                    <div class="emi-result" id="emi-result"></div>
-                </div>
-            </div>
-            <div class="card">
-                <h3>My Loan Applications</h3>
-                <div class="table-wrap">
-                    <table class="table">
-                        <thead><tr><th>Loan ID</th><th>Type</th><th>Amount</th><th>Tenure</th><th>EMI</th><th>Rate</th><th>Status</th><th>Applied</th></tr></thead>
-                        <tbody id="loan-tbody"></tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <!-- ============ CARDS ============ -->
-        <section id="view-cards" class="view">
-            <div class="section-head">
-                <h2>Card Management</h2>
-                <p>Request Debit / Credit cards, block them instantly &amp; generate PINs.</p>
-            </div>
-            <div class="grid-2">
-                <div class="card">
-                    <h3>Request a New Card</h3>
-                    <form id="card-form">
-                        <label>Card Type *</label>
-                        <select id="card-type"><option>Debit Card</option><option>Credit Card</option></select>
-                        <label>Link to Account (Debit only) *</label><select id="card-account" class="input"></select>
-                        <label>Card Variant *</label>
-                        <select id="card-variant"><option>Classic</option><option>Gold</option><option>Platinum</option><option>Infinite</option></select>
-                        <button type="submit" class="btn btn-grad btn-block">Request Card →</button>
-                    </form>
-                </div>
-                <div class="card">
-                    <h3>My Cards</h3>
-                    <div id="cards-list"></div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ============ SERVICES ============ -->
-        <section id="view-services" class="view">
-            <div class="section-head">
-                <h2>Banking Services</h2>
-                <p>Balance inquiry, passbook, cheque book, interest calculator &amp; bank statement.</p>
+                <h2>Hospital &amp; Contact</h2>
+                <p>Locations, contact details, opening times and hospital management information.</p>
             </div>
             <div class="grid-3">
-                <div class="card service-card">
-                    <h3>⚖ Balance Inquiry</h3>
-                    <label>Select Account</label><select id="bal-account" class="input"></select>
-                    <button class="btn btn-ghost" id="btn-balance">Check Balance</button>
-                    <div class="service-output" id="bal-output"></div>
+                <div class="card contact-card">
+                    <h3>Emergency / Contact</h3>
+                    <p><b>24x7 Emergency:</b> <a href="tel:+919876543210">+91 98765 43210</a></p>
+                    <p><b>24x7 Helpline:</b> <a href="tel:18009876543">1800-987-6543</a></p>
+                    <p><b>Appointments:</b> <a href="tel:+919123456780">+91 91234 56780</a></p>
+                    <p><b>Reception:</b> <a href="tel:+91120000000">+91 9120 000 000</a></p>
+                    <p><b>Email:</b> <a href="mailto:care@medicare.in">care@medicare.in</a></p>
+                    <p><b>Email:</b> <a href="mailto:appointments@medicare.in">appointments@medicare.in</a></p>
                 </div>
-                <div class="card service-card">
-                    <h3>📖 Passbook</h3>
-                    <p class="muted">Download / view electronic passbook for any account.</p>
-                    <label>Select Account</label><select id="pass-account" class="input"></select>
-                    <button class="btn btn-ghost" id="btn-passbook">View Passbook</button>
+                <div class="card contact-card">
+                    <h3>🗺 Locations</h3>
+                    <p><b>Main Campus</b><br>12, Health Avenue, MG Road, Indore, MP - 452001</p>
+                    <p><b>City Branch</b><br>45, Green Park, Vijay Nagar, Indore, MP - 452010</p>
+                    <p><b>North Wing</b><br>8, Ring Road, Bhopal, MP - 462001</p>
                 </div>
-                <div class="card service-card">
-                    <h3>🩺 Cheque Book</h3>
-                    <p class="muted">Request a new 25-leaf cheque book for any account.</p>
-                    <label>Select Account</label><select id="cheque-account" class="input"></select>
-                    <button class="btn btn-ghost" id="btn-cheque">Request Cheque Book</button>
-                </div>
-                <div class="card service-card">
-                    <h3>📈 Interest Calculator</h3>
-                    <div class="toolbar-inline">
-                        <select id="int-type"><option>Simple Interest</option><option>Fixed Deposit</option></select>
-                    </div>
-                    <label>Principal (₹)</label><input type="number" id="int-p" class="input" value="150000">
-                    <label>Annual Rate (%)</label><input type="number" id="int-r" class="input" value="7.1" step="0.1">
-                    <label>Years</label><input type="number" id="int-t" class="input" value="3">
-                    <button class="btn btn-primary btn-block" id="btn-interest">Calculate →</button>
-                    <div class="bal-output" id="int-output"></div>
-                </div>
-                <div class="card service-card">
-                    <h3>📄 Bank Statement (PDF)</h3>
-                    <p class="muted">Generate &amp; download a printable statement for your accounts.</p>
-                    <label>Select Account</label><select id="stmt-account" class="input"></select>
-                    <label>Period</label>
-                    <select id="stmt-period" class="input"><option value="7">Last 7 days</option><option value="30">Last 30 days</option><option value="90">Last 90 days</option><option value="365">Last 1 year</option></select>
-                    <button class="btn btn-grad btn-block" id="btn-statement">Generate Statement (PDF)</button>
-                </div>
-                <div class="card service-card">
-                    <h3>🛡 Safe &amp; Secure</h3>
-                    <div class="secure-list">
-                        <div>🔐 Password Encryption <b class="ok">Active</b></div>
-                        <div>📱 OTP Verification <b class="ok">Active</b></div>
-                        <div>🛂 2-Factor Auth <b id="sec-2fa">—</b></div>
-                        <div>🗒 Activity Logs <b class="ok">Active</b></div>
-                    </div>
+                <div class="card contact-card">
+                    <h3>🕒 Emergency Open 24x7</h3>
+                    <p><b>Emergency / ICU:</b> Open 24 &times; 7, all year</p>
+                    <p><b>Ambulance:</b> Available 24 &times; 7</p>
+                    <p><b>Pharmacy:</b> Open 24 &times; 7</p>
+                    <p><b>OPD (Outpatient):</b> Mon &mdash; Sat, 8:00 AM &ndash; 8:00 PM</p>
+                    <p><b>Laboratory:</b> 7:00 AM &ndash; 10:00 PM</p>
+                    <p><b>Sunday:</b> Emergency 24x7 &amp; OPD (10 AM &ndash; 2 PM)</p>
+                    <h3 style="margin-top:18px">Consultation Options</h3>
+                    <p><b>Offline:</b> Visit hospital in person &mdash; the doctor consults you face-to-face.</p>
+                    <p><b>Online:</b> Video / phone consultation from home &mdash; book an online slot.</p>
+                    <h3 style="margin-top:18px">Shift Timings</h3>
+                    <p><b>Morning Shift:</b> 8:00 AM &ndash; 2:00 PM</p>
+                    <p><b>Evening Shift:</b> 2:00 PM &ndash; 8:00 PM</p>
+                    <p><b>Night Shift:</b> 8:00 PM &ndash; 8:00 AM</p>
                 </div>
             </div>
-        </section>
-
-        <!-- ============ PROFILE ============ -->
-        <section id="view-profile" class="view">
-            <div class="section-head">
-                <h2>Profile &amp; Security</h2>
-                <p>Manage personal details, passwords, two-factor authentication &amp; recent activity.</p>
-            </div>
-            <div class="grid-2">
-                <div class="card">
-                    <h3>Personal Information</h3>
-                    <form id="profile-form">
-                        <label>Full Name *</label><input type="text" id="pro-name" class="input" required>
-                        <label>Phone *</label><input type="tel" id="pro-phone" class="input" required>
-                        <label>Address</label><input type="text" id="pro-address" class="input">
-                        <button type="submit" class="btn btn-primary btn-block">Update Profile</button>
-                    </form>
-                </div>
-                <div class="card">
-                    <h3>Security Settings</h3>
-                    <label>Change Password</label>
-                    <form id="pwd-form">
-                        <input type="password" id="pwd-old" class="input" placeholder="Current password" required>
-                        <input type="password" id="pwd-new" class="input" placeholder="New password" required style="margin-top:8px">
-                        <button type="submit" class="btn btn-primary btn-block">Update Password</button>
-                    </form>
-                    <hr class="sep">
-                    <div class="toggle-row">
-                        <div>
-                            <b>Two-Factor Authentication (2FA)</b>
-                            <div class="muted">Verify OTP at every login.</div>
-                        </div>
-                        <label class="switch">
-                            <input type="checkbox" id="twofa-toggle">
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                    <div class="toggle-row">
-                        <div>
-                            <b>SMS / Email Alerts</b>
-                            <div class="muted">Get transaction &amp; low-balance notifications.</div>
-                        </div>
-                        <label class="switch">
-                            <input type="checkbox" id="alerts-toggle" checked>
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                    <div class="toggle-row">
-                        <div>
-                            <b>Logout everywhere</b>
-                            <div class="muted">End all active sessions.</div>
-                        </div>
-                        <button class="btn btn-danger" id="btn-logout-all">Logout All</button>
-                    </div>
-                </div>
-                <div class="card">
-                    <h3>Activity Log</h3>
-                    <div class="table-wrap">
-                        <table class="table">
-                            <thead><tr><th>Timestamp</th><th>Action</th></tr></thead>
-                            <tbody id="activity-tbody"></tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="card">
-                    <h3>Active Sessions</h3>
-                    <div class="muted">Devices currently logged into your account (demo / simulated).</div>
-                    <div id="sessions-list"></div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ============ ADMIN ============ -->
-        <section id="view-admin" class="view">
-            <div class="section-head">
-                <h2>Admin Panel</h2>
-                <p>Full control — user management, account approval, loans &amp; analytics.</p>
-            </div>
-            <div class="admin-tabs" id="admin-tabs">
-                <button class="atab active" data-atab="dash">Dashboard</button>
-                <button class="atab" data-atab="users">Users</button>
-                <button class="atab" data-atab="approvals">Approve Accounts</button>
-                <button class="atab" data-atab="adminloans">Manage Loans</button>
-                <button class="atab" data-atab="reports">Reports</button>
-            </div>
-
-            <div class="apanel" id="apanel-dash">
-                <div class="stats-grid">
-                    <div class="stat-card"><div class="stat-icon">👥</div><div class="stat-num" id="as-customers">0</div><div class="stat-label">Customers</div></div>
-                    <div class="stat-card"><div class="stat-icon">🏦</div><div class="stat-num" id="as-accounts">0</div><div class="stat-label">Accounts</div></div>
-                    <div class="stat-card"><div class="stat-icon">💰</div><div class="stat-num" id="as-deposits">₹0</div><div class="stat-label">Total Deposits</div></div>
-                    <div class="stat-card"><div class="stat-icon">📤</div><div class="stat-num" id="as-loans">₹0</div><div class="stat-label">Loans Disbursed</div></div>
-                    <div class="stat-card"><div class="stat-icon">🔒</div><div class="stat-num" id="as-pending">0</div><div class="stat-label">Pending Approvals</div></div>
-                </div>
-                <div class="grid-2">
-                    <div class="card">
-                        <h3>Monthly Transaction Volume (₹)</h3>
-                        <div id="chart-bars" class="chart-bars"></div>
-                    </div>
-                    <div class="card">
-                        <h3>Record Book</h3>
-                        <div class="muted">Latest 6 account openings &amp; activity in the bank.</div>
-                        <div id="admin-live"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="apanel hidden" id="apanel-users">
-                <div class="card">
-                    <h3>Manage Users</h3>
-                    <div class="table-wrap">
-                        <table class="table">
-                            <thead><tr><th>User</th><th>Email</th><th>Role</th><th>2FA</th><th>Status</th><th>Actions</th></tr></thead>
-                            <tbody id="users-tbody"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <div class="apanel hidden" id="apanel-approvals">
-                <div class="card">
-                    <h3>Approve Accounts</h3>
-                    <p class="muted">Newly opened accounts awaiting approval. Publicly dormant until approved.</p>
-                    <div id="approval-list"></div>
-                </div>
-            </div>
-
-            <div class="apanel hidden" id="apanel-adminloans">
-                <div class="card">
-                    <h3>Loan Applications</h3>
-                    <div class="table-wrap">
-                        <table class="table">
-                            <thead><tr><th>ID</th><th>Customer</th><th>Type</th><th>Amount</th><th>EMI</th><th>Status</th><th>Actions</th></tr></thead>
-                            <tbody id="alloan-tbody"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <div class="apanel hidden" id="apanel-reports">
-                <div class="grid-3">
-                    <div class="card"><h3>Account Mix</h3><div id="chart-mix-wrap"></div></div>
-                    <div class="card"><h3>Loan Book</h3><div class="muted">Disbursed by category.</div><div id="loan-book"></div></div>
-                    <div class="card"><h3>Top Customers</h3><div class="muted">By total balance.</div><div id="top-customers"></div></div>
-                </div>
-                <div class="card">
-                    <h3>Branch Analytics Snapshot</h3>
-                    <div class="kv-grid" id="report-kv"></div>
-                </div>
+            <div class="card">
+                <h3>Contact any Doctor</h3>
+                <p class="muted">Call or email any doctor directly from the roster below.</p>
+                <div id="contact-doctors"></div>
             </div>
         </section>
     </main>
@@ -569,53 +312,15 @@
     <!-- FOOTER -->
     <footer class="footer">
         <div class="container">
-            <p><b>24x7 Helpline:</b> <a href="tel:180009668265">1800-NOVA-BANK</a> &nbsp;|&nbsp; <b>NetBanking:</b> <a href="tel:18008876540">1800-887-6540</a> &nbsp;|&nbsp; <a href="mailto:care@novabank.in">care@novabank.in</a></p>
-            <p>&copy; 2026 NovaBank — Banking Management System. All rights reserved.</p>
-            <p class="muted">Demo project. Data shown is randomly generated. No real banking is performed.</p>
+            <p><b>24x7 Helpline:</b> <a href="tel:18009876543">1800-987-6543</a> &nbsp;|&nbsp;
+                <b>Emergency:</b> <a href="tel:+919876543210">+91 98765 43210</a></p>
+            <p>&copy; 2026 MediCare Hospitals. All rights reserved &mdash; Hospital Management System</p>
+            <p class="muted">For educational / demo purposes. Sample hospital database shown.</p>
         </div>
     </footer>
 
-    <!-- OTP MODAL -->
-    <div class="modal-overlay hidden" id="otp-modal">
-        <div class="modal">
-            <h3>🔐 OTP Verification</h3>
-            <p class="muted" id="otp-purpose">We sent a 6-digit code to your registered contact.</p>
-            <div class="demo-otp" id="demo-otp">—</div>
-            <div class="otp-row">
-                <input type="text" id="otp-input" class="input otp-input" maxlength="6" inputmode="numeric" placeholder="Enter 6-digit OTP">
-            </div>
-            <div class="modal-actions">
-                <button class="btn btn-ghost" id="otp-cancel">Cancel</button>
-                <button class="btn btn-grad" id="otp-verify">Verify OTP →</button>
-            </div>
-            <button class="btn-link" id="otp-resend">Resend OTP</button>
-        </div>
-    </div>
-
-    <!-- GENERIC MODAL -->
-    <div class="modal-overlay hidden" id="modal">
-        <div class="modal modal-lg" id="modal-box"></div>
-    </div>
-
-    <!-- MINI STATEMENT MODAL -->
-    <div class="modal-overlay hidden" id="mini-modal">
-        <div class="modal modal-lg">
-            <div class="card-flex">
-                <h3>Mini Statement</h3>
-                <button class="btn btn-ghost" id="mini-close">✕ Close</button>
-            </div>
-            <div id="mini-content"></div>
-        </div>
-    </div>
-
-    <!-- PRINT / STATEMENT AREA -->
-    <div id="print-area"></div>
-
     <!-- TOAST -->
     <div id="toast" class="toast"></div>
-
-    <!-- NOTIFICATION DROPDOWN -->
-    <div class="notif-panel hidden" id="notif-panel"></div>
 
     <script src="js/data.js"></script>
     <script src="js/app.js"></script>
